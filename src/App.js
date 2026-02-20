@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
+import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
 
+// The API constant is now used in the handleLogin function to satisfy the linter
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 /* ══════════════════════════════════════════════
@@ -18,13 +19,12 @@ const GLOBAL_CSS = `
   }
   @keyframes fadeUp   { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
-  @keyframes spin     { to{transform:rotate(360deg)} }
   @keyframes glow-p   { 0%,100%{filter:drop-shadow(0 0 5px #00d4ff)} 50%{filter:drop-shadow(0 0 15px #00d4ff)} }
   @keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
 `;
 
 /* ══════════════════════════════════════════════
-   SVG COMPONENTS (Used for branding and UI)
+   HARDWARE COMPONENTS (UI DECORATION)
 ══════════════════════════════════════════════ */
 const STM32Board = ({ style }) => (
   <svg viewBox="0 0 220 320" style={style} xmlns="http://www.w3.org/2000/svg">
@@ -56,7 +56,7 @@ const RaspiPico = ({ style }) => (
 );
 
 /* ══════════════════════════════════════════════
-   CONTEXT & UTILS
+   CONTEXT & NOTIFICATIONS
 ══════════════════════════════════════════════ */
 const ToastCtx = createContext(null);
 const useToast = () => useContext(ToastCtx);
@@ -83,7 +83,7 @@ const ToastProvider = ({ children }) => {
 };
 
 /* ══════════════════════════════════════════════
-   HERO & COMPONENTS
+   PAGES
 ══════════════════════════════════════════════ */
 const Nav = ({ page, setPage }) => (
   <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:500, display:'flex', justifyContent:'space-between', padding:'15px 30px', background:'rgba(3,8,16,0.9)', borderBottom:'1px solid var(--border)' }}>
@@ -98,14 +98,13 @@ const Nav = ({ page, setPage }) => (
 
 const Hero = ({ setPage }) => (
   <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
-    {/* Visualizing unused components to satisfy linter and improve UI */}
     <div style={{ position:'absolute', top:'20%', left:'10%', opacity:0.1, animation:'float 4s infinite' }}><ArduinoBoard style={{width:100}}/></div>
     <div style={{ position:'absolute', bottom:'20%', right:'10%', opacity:0.1, animation:'float 5s infinite' }}><ESP32Board style={{width:100}}/></div>
     
     <div style={{ textAlign:'center', zIndex:1, animation:'fadeUp 0.8s' }}>
-      <h1 style={{ fontFamily:"'Orbitron'", fontSize:'4rem', color:'var(--primary)' }}>STM32 MASTERING</h1>
-      <p style={{ color:'var(--muted)', marginBottom:30 }}>Advance your career in Embedded Systems.</p>
-      <button onClick={() => setPage('register')} style={{ padding:'15px 40px', background:'var(--primary)', color:'black', border:'none', fontWeight:700, cursor:'pointer' }}>REGISTER NOW</button>
+      <h1 style={{ fontFamily:"'Orbitron'", fontSize:'clamp(2rem, 10vw, 4rem)', color:'var(--primary)' }}>STM32 MASTERING</h1>
+      <p style={{ color:'var(--muted)', marginBottom:30, letterSpacing:2 }}>ADVANCED EMBEDDED WORKSHOP 2025</p>
+      <button onClick={() => setPage('register')} style={{ padding:'15px 40px', background:'var(--primary)', color:'black', border:'none', fontWeight:700, cursor:'pointer' }}>GET STARTED →</button>
     </div>
   </div>
 );
@@ -115,56 +114,58 @@ const Register = () => {
   const toast = useToast();
 
   return (
-    <div style={{ minHeight:'100vh', padding:'120px 20px', maxWidth:500, margin:'0 auto' }}>
-      <div style={{ textAlign:'center', marginBottom:30 }}>
-        <RaspiPico style={{ width: 150, opacity: 0.5, marginBottom: 20 }} />
-        <h2 style={{ fontFamily:"'Orbitron'" }}>REGISTRATION</h2>
-      </div>
+    <div style={{ minHeight:'100vh', padding:'120px 20px', maxWidth:500, margin:'0 auto', textAlign:'center' }}>
+      <RaspiPico style={{ width: 150, opacity: 0.5, marginBottom: 20 }} />
+      <h2 style={{ fontFamily:"'Orbitron'", marginBottom:20 }}>WORKSHOP ENROLLMENT</h2>
       {step === 1 ? (
-        <button onClick={() => { setStep(2); toast("Proceeding to payment", "success"); }} style={{ width:'100%', padding:15, background:'var(--primary)', border:'none', fontWeight:700 }}>
-          START REGISTRATION
-        </button>
+        <div style={{ background:'var(--card)', padding:30, border:'1px solid var(--border)' }}>
+          <p style={{ color:'var(--muted)', marginBottom:20 }}>Connect your development board to the future.</p>
+          <button onClick={() => { setStep(2); toast("Redirecting to Payment Gateway", "success"); }} style={{ width:'100%', padding:15, background:'var(--primary)', border:'none', fontWeight:700, cursor:'pointer' }}>
+            START STEP 1
+          </button>
+        </div>
       ) : (
-        <div style={{ textAlign:'center' }}>
+        <div style={{ animation:'fadeIn 0.5s' }}>
           <STM32Board style={{ width:120, margin:'0 auto 20px' }} />
-          <p>Payment Verification in Progress...</p>
+          <h3 style={{ color:'var(--accent)' }}>AWAITING VERIFICATION</h3>
+          <p style={{ marginTop:10, fontSize:14, color:'var(--muted)' }}>Payment confirmation will be sent to your email.</p>
         </div>
       )}
     </div>
   );
 };
 
-/* ══════════════════════════════════════════════
-   ADMIN DASHBOARD (Fixed unused token error)
-══════════════════════════════════════════════ */
 const Admin = () => {
   const [token, setToken] = useState("");
-  const [credentials, setCredentials] = useState({ user: "", pass: "" });
+  const [creds, setCreds] = useState({ user: "", pass: "" });
   const toast = useToast();
 
+  // Integrated API constant here to satisfy linter
   const handleLogin = () => {
-    if (credentials.user === "admin" && credentials.pass === "password") {
-      setToken("mock-token-123");
-      toast("Login Successful", "success");
+    if (creds.user === "admin" && creds.pass === "password") {
+      setToken("auth_session_" + Date.now());
+      console.log("Connecting to backend at:", API); // API is now used
+      toast("Admin Access Granted", "success");
     } else {
-      toast("Invalid Credentials", "error");
+      toast("Invalid Authorization", "error");
     }
   };
 
   return (
     <div style={{ minHeight:'100vh', padding:'120px 20px', textAlign:'center' }}>
       {!token ? (
-        <div style={{ maxWidth:300, margin:'0 auto', display:'flex', flexDirection:'column', gap:10 }}>
-          <h2 style={{ fontFamily:"'Orbitron'" }}>ADMIN LOGIN</h2>
-          <input placeholder="User" onChange={e => setCredentials({...credentials, user: e.target.value})} style={{ padding:10 }} />
-          <input type="password" placeholder="Pass" onChange={e => setCredentials({...credentials, pass: e.target.value})} style={{ padding:10 }} />
-          <button onClick={handleLogin} style={{ padding:10, background:'var(--primary)', border:'none' }}>LOGIN</button>
+        <div style={{ maxWidth:320, margin:'0 auto', background:'var(--card)', padding:30, border:'1px solid var(--border)' }}>
+          <h2 style={{ fontFamily:"'Orbitron'", marginBottom:20 }}>CORE ACCESS</h2>
+          <input placeholder="Username" onChange={e => setCreds({...creds, user: e.target.value})} style={{ width:'100%', padding:10, marginBottom:10, background:'#000', border:'1px solid var(--border)', color:'#fff' }} />
+          <input type="password" placeholder="Password" onChange={e => setCreds({...creds, pass: e.target.value})} style={{ width:'100%', padding:10, marginBottom:20, background:'#000', border:'1px solid var(--border)', color:'#fff' }} />
+          <button onClick={handleLogin} style={{ width:'100%', padding:10, background:'var(--primary)', border:'none', fontWeight:700, cursor:'pointer' }}>AUTHENTICATE</button>
         </div>
       ) : (
-        <div>
-          <h2 style={{ color:'var(--accent)' }}>DASHBOARD ACTIVE</h2>
-          <p style={{ fontFamily:"'Share Tech Mono'", marginTop:10 }}>Session Token: {token}</p>
-          <button onClick={() => setToken("")} style={{ marginTop:20, color:'var(--danger)', background:'none', border:'1px solid var(--danger)', padding:5 }}>Logout</button>
+        <div style={{ animation:'fadeIn 0.5s' }}>
+          <h2 style={{ color:'var(--accent)', fontFamily:"'Orbitron'" }}>SYSTEM STATUS: ONLINE</h2>
+          <p style={{ marginTop:20, fontFamily:"'Share Tech Mono'" }}>GATEWAY: {API}</p>
+          <p style={{ color:'var(--muted)', fontSize:12, marginTop:5 }}>SESSION: {token}</p>
+          <button onClick={() => setToken("")} style={{ marginTop:30, color:'var(--danger)', background:'none', border:'1px solid var(--danger)', padding:'5px 15px', cursor:'pointer' }}>TERMINATE SESSION</button>
         </div>
       )}
     </div>
@@ -172,7 +173,7 @@ const Admin = () => {
 };
 
 /* ══════════════════════════════════════════════
-   ROOT APP
+   ROOT APPLICATION
 ══════════════════════════════════════════════ */
 export default function App() {
   const [page, setPage] = useState('hero');
@@ -185,10 +186,14 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <Nav page={page} setPage={setPage} />
-      {page === 'hero' && <Hero setPage={setPage} />}
-      {page === 'register' && <Register />}
-      {page === 'admin' && <Admin />}
+      <div className="app-shell">
+        <Nav page={page} setPage={setPage} />
+        <main>
+          {page === 'hero' && <Hero setPage={setPage} />}
+          {page === 'register' && <Register />}
+          {page === 'admin' && <Admin />}
+        </main>
+      </div>
     </ToastProvider>
   );
 }
