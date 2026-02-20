@@ -232,7 +232,7 @@ const Intro = ({ onDone }) => {
       setTimeout(() => onDone(), 7900),
     ];
     return () => t.forEach(clearTimeout);
-  }, []);
+  }, [onDone]);
 
   // code rain
   useEffect(() => {
@@ -243,7 +243,7 @@ const Intro = ({ onDone }) => {
       else clearInterval(iv);
     }, 210);
     return () => clearInterval(iv);
-  }, [phase]);
+  }, [phase,lines]);
 
   // typing
   useEffect(() => {
@@ -882,9 +882,9 @@ const Admin = () => {
     } finally {
       setLoading(false);
     }
-  }, [token, search, fStatus, fKit]);
+  }, [token, search, fStatus, fKit,toast]);
 
-  useEffect(() => { if (token) { setPage(1); fetchData(1); } }, [token, search, fStatus, fKit]);
+  useEffect(() => { if (token) { setPage(1); fetchData(1); } }, [token, search, fStatus, fKit,fetchData]);
 
   const exportCSV = () => {
     const url = `${API}/api/admin/export?status=${fStatus}&kit=${fKit}`;
