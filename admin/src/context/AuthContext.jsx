@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Attach token to all requests
+  // ✅ Attach token to ALL axios requests whenever token changes
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -18,6 +18,14 @@ export function AuthProvider({ children }) {
     }
   }, [token]);
 
+  // ✅ Restore token on page refresh
+  useEffect(() => {
+    const saved = localStorage.getItem('adminToken');
+    if (saved) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${saved}`;
+    }
+  }, []);
+
   const login = async (username, password) => {
     setLoading(true);
     setError('');
@@ -25,6 +33,7 @@ export function AuthProvider({ children }) {
       const { data } = await axios.post(`${API}/api/admin/login`, { username, password });
       setToken(data.token);
       localStorage.setItem('adminToken', data.token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
       return true;
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -37,6 +46,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     localStorage.removeItem('adminToken');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   return (

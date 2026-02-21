@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import {
   Search, Check, X, Eye, ExternalLink,
-  Loader2, FileText, Image, QrCode
+  Loader2, FileText, Image as ImageIcon, QrCode  // ✅ Fixed: Image → ImageIcon
 } from 'lucide-react';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -54,7 +54,9 @@ function ConfirmModal({ reg, onClose, onDone }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <motion.div initial={{ opacity:0,scale:0.9 }} animate={{ opacity:1,scale:1 }}
+      <motion.div
+        initial={{ opacity:0, scale:0.9 }}
+        animate={{ opacity:1, scale:1 }}
         className="relative glass rounded-2xl p-6 max-w-sm w-full border border-green-500/30"
         style={{ boxShadow:'0 0 40px rgba(34,197,94,0.15)' }}
       >
@@ -97,7 +99,9 @@ function RejectModal({ reg, onClose, onDone }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <motion.div initial={{ opacity:0,scale:0.9 }} animate={{ opacity:1,scale:1 }}
+      <motion.div
+        initial={{ opacity:0, scale:0.9 }}
+        animate={{ opacity:1, scale:1 }}
         className="relative glass rounded-2xl p-6 max-w-sm w-full border border-red-500/30"
         style={{ boxShadow:'0 0 40px rgba(239,68,68,0.15)' }}
       >
@@ -193,7 +197,7 @@ function DetailModal({ reg, onClose }) {
             </div>
           )}
 
-          {/* Documents - ✅ now uses openFile with JWT token */}
+          {/* Documents */}
           <div className="space-y-2">
             <p className="font-mono text-xs text-slate-600 tracking-wider">DOCUMENTS</p>
 
@@ -213,7 +217,8 @@ function DetailModal({ reg, onClose }) {
                 onClick={() => openFile(`${API}/api/admin/registrations/${reg._id}/payment-proof`)}
                 className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors w-full text-left"
               >
-                <Image size={16} className="text-indigo-400" />
+                {/* ✅ Fixed: ImageIcon instead of Image */}
+                <ImageIcon size={16} className="text-indigo-400" />
                 <span className="font-body text-sm text-indigo-300 flex-1">View Payment Proof</span>
                 <ExternalLink size={13} className="text-slate-500" />
               </button>
