@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import {
-  Search, Check, X, Eye, ExternalLink, ChevronDown,
-  Loader2, AlertTriangle, FileText, Image, QrCode
+  Search, Check, X, Eye, ExternalLink,
+  Loader2, FileText, Image, QrCode
 } from 'lucide-react';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -12,6 +12,22 @@ const STATUS_STYLES = {
   processing: 'bg-amber-950/40 border-amber-500/40 text-amber-400',
   confirmed:  'bg-green-950/40 border-green-500/40 text-green-400',
   rejected:   'bg-red-950/40 border-red-500/40 text-red-400',
+};
+
+// ✅ Opens file with JWT auth token
+const openFile = async (url) => {
+  try {
+    const token = localStorage.getItem('adminToken');
+    const response = await axios.get(url, {
+      responseType: 'blob',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const blobUrl = URL.createObjectURL(response.data);
+    window.open(blobUrl, '_blank');
+  } catch (err) {
+    console.error('Failed to open file:', err);
+    alert('Failed to load file. Please try again.');
+  }
 };
 
 function Badge({ status }) {
@@ -90,7 +106,9 @@ function RejectModal({ reg, onClose, onDone }) {
           Rejecting <strong className="text-white">{reg.firstName} {reg.lastName}</strong>.
           A rejection email with your reason will be sent.
         </p>
-        <label className="block font-body text-xs text-slate-400 mb-1.5">Reason for rejection <span className="text-red-400">*</span></label>
+        <label className="block font-body text-xs text-slate-400 mb-1.5">
+          Reason for rejection <span className="text-red-400">*</span>
+        </label>
         <textarea
           value={reason}
           onChange={e => { setReason(e.target.value); setErr(''); }}
@@ -116,7 +134,9 @@ function DetailModal({ reg, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
+      <motion.div
+        initial={{ opacity:0, y:20 }}
+        animate={{ opacity:1, y:0 }}
         className="relative glass rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-indigo-500/30"
         onClick={e => e.stopPropagation()}
       >
@@ -126,6 +146,7 @@ function DetailModal({ reg, onClose }) {
             <X size={14} />
           </button>
         </div>
+
         <div className="p-6 space-y-4">
           <div className="flex items-start justify-between">
             <div>
@@ -138,11 +159,11 @@ function DetailModal({ reg, onClose }) {
 
           <div className="grid grid-cols-2 gap-3">
             {[
-              ['College', reg.college],
+              ['College',        reg.college],
               ['Specialization', reg.specialization],
-              ['Course', reg.course],
-              ['Package', reg.kitOption === 'with-kit' ? '₹1200 With Kit' : '₹699 No Kit'],
-              ['Amount Paid', `₹${reg.amount}`],
+              ['Course',         reg.course],
+              ['Package',        reg.kitOption === 'with-kit' ? '₹1200 With Kit' : '₹699 No Kit'],
+              ['Amount Paid',    `₹${reg.amount}`],
               ['Transaction ID', reg.transactionId],
             ].map(([k, v]) => (
               <div key={k} className="bg-slate-900/60 rounded-xl p-3">
@@ -172,32 +193,41 @@ function DetailModal({ reg, onClose }) {
             </div>
           )}
 
-          {/* Files */}
+          {/* Documents - ✅ now uses openFile with JWT token */}
           <div className="space-y-2">
             <p className="font-mono text-xs text-slate-600 tracking-wider">DOCUMENTS</p>
+
             {reg.resume?.filename && (
-              <a href={`${API}/api/admin/registrations/${reg._id}/resume`} target="_blank" rel="noreferrer"
-                className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
+              <button
+                onClick={() => openFile(`${API}/api/admin/registrations/${reg._id}/resume`)}
+                className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors w-full text-left"
+              >
                 <FileText size={16} className="text-indigo-400" />
                 <span className="font-body text-sm text-indigo-300 flex-1">View Resume</span>
                 <ExternalLink size={13} className="text-slate-500" />
-              </a>
+              </button>
             )}
+
             {reg.paymentProof?.filename && (
-              <a href={`${API}/api/admin/registrations/${reg._id}/payment-proof`} target="_blank" rel="noreferrer"
-                className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
+              <button
+                onClick={() => openFile(`${API}/api/admin/registrations/${reg._id}/payment-proof`)}
+                className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors w-full text-left"
+              >
                 <Image size={16} className="text-indigo-400" />
                 <span className="font-body text-sm text-indigo-300 flex-1">View Payment Proof</span>
                 <ExternalLink size={13} className="text-slate-500" />
-              </a>
+              </button>
             )}
-            {reg.qrCode?.data && (
-              <a href={`${API}/api/admin/registrations/${reg._id}/qrcode`} target="_blank" rel="noreferrer"
-                className="flex items-center gap-3 p-3 rounded-xl border border-green-500/20 hover:bg-green-950/30 transition-colors">
+
+            {reg.qrCode?.contentType && (
+              <button
+                onClick={() => openFile(`${API}/api/admin/registrations/${reg._id}/qrcode`)}
+                className="flex items-center gap-3 p-3 rounded-xl border border-green-500/20 hover:bg-green-950/30 transition-colors w-full text-left"
+              >
                 <QrCode size={16} className="text-green-400" />
                 <span className="font-body text-sm text-green-300 flex-1">View Entry QR Code</span>
                 <ExternalLink size={13} className="text-slate-500" />
-              </a>
+              </button>
             )}
           </div>
 
@@ -231,7 +261,10 @@ export default function RegistrationsTable({ onAction }) {
     finally { setLoading(false); }
   }, [search, statusFilter]);
 
-  useEffect(() => { const t = setTimeout(load, 300); return () => clearTimeout(t); }, [load]);
+  useEffect(() => {
+    const t = setTimeout(load, 300);
+    return () => clearTimeout(t);
+  }, [load]);
 
   const handleDone = () => {
     setConfirmTarget(null);
@@ -264,7 +297,10 @@ export default function RegistrationsTable({ onAction }) {
           <option value="confirmed">Confirmed</option>
           <option value="rejected">Rejected</option>
         </select>
-        <button onClick={load} className="px-4 py-2 rounded-xl border border-indigo-500/30 font-display text-xs font-bold tracking-wider text-indigo-400 hover:bg-indigo-950/40 transition-colors">
+        <button
+          onClick={load}
+          className="px-4 py-2 rounded-xl border border-indigo-500/30 font-display text-xs font-bold tracking-wider text-indigo-400 hover:bg-indigo-950/40 transition-colors"
+        >
           REFRESH
         </button>
       </div>
@@ -276,7 +312,9 @@ export default function RegistrationsTable({ onAction }) {
             <thead>
               <tr className="border-b border-slate-800">
                 {['Name', 'Email', 'College', 'Package', 'Txn ID', 'Status', 'Registered', 'Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left font-mono text-xs text-slate-600 tracking-widest whitespace-nowrap">{h.toUpperCase()}</th>
+                  <th key={h} className="px-4 py-3 text-left font-mono text-xs text-slate-600 tracking-widest whitespace-nowrap">
+                    {h.toUpperCase()}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -286,7 +324,9 @@ export default function RegistrationsTable({ onAction }) {
                   <Loader2 size={24} className="animate-spin text-indigo-400 mx-auto" />
                 </td></tr>
               ) : regs.length === 0 ? (
-                <tr><td colSpan={8} className="text-center py-16 font-body text-slate-600">No registrations found</td></tr>
+                <tr><td colSpan={8} className="text-center py-16 font-body text-slate-600">
+                  No registrations found
+                </td></tr>
               ) : (
                 regs.map((reg, i) => (
                   <motion.tr
@@ -302,29 +342,44 @@ export default function RegistrationsTable({ onAction }) {
                     <td className="px-4 py-3 font-body text-xs text-slate-400 max-w-[180px] truncate">{reg.email}</td>
                     <td className="px-4 py-3 font-body text-xs text-slate-500 max-w-[150px] truncate">{reg.college}</td>
                     <td className="px-4 py-3">
-                      <span className={`font-mono text-xs px-2 py-0.5 rounded-full border ${reg.kitOption === 'with-kit' ? 'bg-violet-950/40 border-violet-500/40 text-violet-400' : 'bg-slate-900 border-slate-700 text-slate-500'}`}>
+                      <span className={`font-mono text-xs px-2 py-0.5 rounded-full border ${
+                        reg.kitOption === 'with-kit'
+                          ? 'bg-violet-950/40 border-violet-500/40 text-violet-400'
+                          : 'bg-slate-900 border-slate-700 text-slate-500'
+                      }`}>
                         {reg.kitOption === 'with-kit' ? '₹1200 Kit' : '₹699'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500 max-w-[140px] truncate">{reg.transactionId || '—'}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 max-w-[140px] truncate">
+                      {reg.transactionId || '—'}
+                    </td>
                     <td className="px-4 py-3"><Badge status={reg.status} /></td>
                     <td className="px-4 py-3 font-mono text-xs text-slate-600 whitespace-nowrap">
                       {new Date(reg.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5 flex-nowrap">
-                        <button onClick={() => setDetailTarget(reg)}
-                          className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-950/50 transition-all" title="View Details">
+                        <button
+                          onClick={() => setDetailTarget(reg)}
+                          className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-950/50 transition-all"
+                          title="View Details"
+                        >
                           <Eye size={13} />
                         </button>
                         {reg.status === 'processing' && (
                           <>
-                            <button onClick={() => setConfirmTarget(reg)}
-                              className="p-1.5 rounded-lg bg-green-950/30 text-green-500 hover:bg-green-950/60 border border-green-500/20 transition-all" title="Confirm">
+                            <button
+                              onClick={() => setConfirmTarget(reg)}
+                              className="p-1.5 rounded-lg bg-green-950/30 text-green-500 hover:bg-green-950/60 border border-green-500/20 transition-all"
+                              title="Confirm"
+                            >
                               <Check size={13} />
                             </button>
-                            <button onClick={() => setRejectTarget(reg)}
-                              className="p-1.5 rounded-lg bg-red-950/30 text-red-500 hover:bg-red-950/60 border border-red-500/20 transition-all" title="Reject">
+                            <button
+                              onClick={() => setRejectTarget(reg)}
+                              className="p-1.5 rounded-lg bg-red-950/30 text-red-500 hover:bg-red-950/60 border border-red-500/20 transition-all"
+                              title="Reject"
+                            >
                               <X size={13} />
                             </button>
                           </>
@@ -338,7 +393,9 @@ export default function RegistrationsTable({ onAction }) {
           </table>
         </div>
         <div className="px-4 py-3 border-t border-slate-800">
-          <p className="font-mono text-xs text-slate-600">{regs.length} record{regs.length !== 1 ? 's' : ''}</p>
+          <p className="font-mono text-xs text-slate-600">
+            {regs.length} record{regs.length !== 1 ? 's' : ''}
+          </p>
         </div>
       </div>
 
