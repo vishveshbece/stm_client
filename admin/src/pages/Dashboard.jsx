@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import {
   Cpu, LogOut, Users, CheckCircle, XCircle, Clock,
-  Package, Calendar, LayoutDashboard, QrCode, RefreshCw
+  Package, Calendar, QrCode, RefreshCw
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import RegistrationsTable from '../components/RegistrationsTable';
@@ -22,13 +22,16 @@ const statCards = (stats) => [
 ];
 
 const TABS = [
-  { id: 'registrations', label: 'Registrations', icon: Users },
-  { id: 'scanner',       label: 'Attendance Scanner', icon: QrCode },
+  { id: 'registrations', label: 'Registrations',      icon: Users },
+  { id: 'scanner',       label: 'Attendance Scanner',  icon: QrCode },
 ];
 
 export default function Dashboard() {
   const { logout } = useAuth();
-  const [stats, setStats] = useState({ total:0, processing:0, confirmed:0, rejected:0, withKit:0, withoutKit:0, day1:0, day2:0 });
+  const [stats, setStats] = useState({
+    total: 0, processing: 0, confirmed: 0, rejected: 0,
+    withKit: 0, withoutKit: 0, day1: 0, day2: 0,
+  });
   const [activeTab, setActiveTab] = useState('registrations');
   const [statsLoading, setStatsLoading] = useState(true);
 
@@ -55,7 +58,7 @@ export default function Dashboard() {
             <p className="font-display text-xs text-slate-600 leading-none tracking-wider">ADMIN PORTAL</p>
           </div>
         </div>
-        
+
         {/* Tab Nav */}
         <div className="hidden md:flex items-center gap-1 bg-slate-900/80 rounded-xl p-1 border border-slate-800">
           {TABS.map(tab => (
@@ -74,7 +77,10 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={loadStats} className="p-2 rounded-lg text-slate-500 hover:text-indigo-400 hover:bg-indigo-950/50 transition-all">
+          <button
+            onClick={loadStats}
+            className="p-2 rounded-lg text-slate-500 hover:text-indigo-400 hover:bg-indigo-950/50 transition-all"
+          >
             <RefreshCw size={15} />
           </button>
           <button
@@ -89,10 +95,13 @@ export default function Dashboard() {
       {/* Mobile tabs */}
       <div className="md:hidden flex border-b border-slate-800">
         {TABS.map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
             className={`flex-1 flex items-center justify-center gap-2 py-3 font-display text-xs font-bold tracking-wider border-b-2 transition-all ${
               activeTab === tab.id ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-600'
-            }`}>
+            }`}
+          >
             <tab.icon size={13} /> {tab.label}
           </button>
         ))}
@@ -107,7 +116,9 @@ export default function Dashboard() {
                 <Icon size={14} className="text-white" />
               </div>
               <div>
-                <p className="font-display text-lg font-black text-white leading-none">{statsLoading ? '—' : value}</p>
+                <p className="font-display text-lg font-black text-white leading-none">
+                  {statsLoading ? '—' : value}
+                </p>
                 <p className="font-body text-xs text-slate-500 mt-0.5">{label}</p>
               </div>
             </div>
@@ -118,7 +129,8 @@ export default function Dashboard() {
       {/* Content */}
       <div className="flex-1 p-6">
         {activeTab === 'registrations' && <RegistrationsTable onAction={loadStats} />}
-        {activeTab === 'scanner' && <AttendanceScanner />}
+        {/* ✅ Pass loadStats as onScan so stats update after every scan */}
+        {activeTab === 'scanner' && <AttendanceScanner onScan={loadStats} />}
       </div>
     </div>
   );

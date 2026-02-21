@@ -3,6 +3,12 @@ const router = express.Router();
 const Registration = require('../models/Registration');
 const authMiddleware = require('../middleware/auth');
 
+// Allowed dates for each day (IST)
+const ALLOWED_DATES = {
+  1: '2025-03-05',
+  2: '2025-03-06',
+};
+
 // Scan QR and mark attendance
 router.post('/scan', authMiddleware, async (req, res) => {
   try {
@@ -10,6 +16,16 @@ router.post('/scan', authMiddleware, async (req, res) => {
 
     if (!day || !['1', '2', 1, 2].includes(day)) {
       return res.status(400).json({ message: 'Invalid day. Must be 1 or 2.' });
+    }
+
+    const dayNum = parseInt(day);
+
+    // ✅ Check if today matches the allowed date for this day
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }); // 'YYYY-MM-DD' in IST
+    if (today !== ALLOWED_DATES[dayNum]) {
+      return res.status(403).json({
+        message: `Day ${dayNum} attendance can only be marked on ${ALLOWED_DATES[dayNum]}. Today is ${today}.`,
+      });
     }
 
     let parsed;
@@ -28,13 +44,17 @@ router.post('/scan', authMiddleware, async (req, res) => {
     if (!reg) return res.status(404).json({ message: 'Registration not found' });
     if (reg.uniqueToken !== token) return res.status(400).json({ message: 'Invalid QR token' });
     if (reg.status !== 'confirmed') {
-      return res.status(403).json({ message: `Registration is ${reg.status}. Only confirmed attendees can enter.` });
+      return res.status(403).json({
+        message: `Registration is ${reg.status}. Only confirmed attendees can enter.`,
+      });
     }
 
-    const dayField = `attendedDay${day}`;
+    const dayField = `attendedDay${dayNum}`;
+
+    // ✅ Prevent duplicate scan for same day
     if (reg[dayField]) {
       return res.status(409).json({
-        message: `${reg.firstName} ${reg.lastName} has already been marked present for Day ${day}.`,
+        message: `${reg.firstName} ${reg.lastName} has already been marked present for Day ${dayNum}.`,
         alreadyScanned: true,
         name: `${reg.firstName} ${reg.lastName}`,
       });
@@ -45,11 +65,11 @@ router.post('/scan', authMiddleware, async (req, res) => {
 
     res.json({
       success: true,
-      message: `✅ Welcome! ${reg.firstName} ${reg.lastName} marked present for Day ${day}.`,
+      message: `✅ Welcome! ${reg.firstName} ${reg.lastName} marked present for Day ${dayNum}.`,
       name: `${reg.firstName} ${reg.lastName}`,
       college: reg.college,
       kitOption: reg.kitOption,
-      day,
+      day: dayNum,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
