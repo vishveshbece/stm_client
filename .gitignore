@@ -8,4 +8,5 @@ backend/qrcodes/
 backend/.env
 .env
 *.log
-EOF
+EOF.env
+backend/.env
