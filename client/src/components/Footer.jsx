@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Phone, Mail, MapPin } from 'lucide-react';
+import { Cpu, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (

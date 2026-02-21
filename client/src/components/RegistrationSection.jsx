@@ -347,7 +347,7 @@ export default function RegistrationSection({ onClose }) {
                   >
                     {paymentProof ? (
                       <div className="text-center">
-                        <QrCode size={20} className="text-green-400 mx-auto mb-2" />
+                        <Image size={20} className="text-green-400 mx-auto mb-2" />
                         <p className="font-body text-sm text-green-300 font-medium">{paymentProof.name}</p>
                         <p className="font-mono text-xs text-slate-500">{(paymentProof.size / 1024).toFixed(1)} KB</p>
                       </div>
