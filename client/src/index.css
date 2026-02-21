@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    background: #030712;
+    color: #e2e8f0;
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0f1e; }
+  ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 3px; }
+}
+
+@layer utilities {
+  .font-display { font-family: 'Orbitron', monospace; }
+  .font-body { font-family: 'Exo 2', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  
+  .glow-indigo {
+    box-shadow: 0 0 30px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.2);
+  }
+  .glow-violet {
+    box-shadow: 0 0 30px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2);
+  }
+  .text-glow {
+    text-shadow: 0 0 20px rgba(99,102,241,0.8), 0 0 40px rgba(139,92,246,0.4);
+  }
+  .border-glow {
+    border: 1px solid rgba(99,102,241,0.4);
+    box-shadow: 0 0 15px rgba(99,102,241,0.15), inset 0 0 15px rgba(99,102,241,0.05);
+  }
+  .glass {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+/* Animated circuit background */
+.circuit-bg {
+  background-image: 
+    linear-gradient(rgba(99,102,241,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Scan animation overlay */
+.scan-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.8), transparent);
+  animation: scanLine 3s linear infinite;
+}
+
+@keyframes scanLine {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Particle dots */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(99,102,241,0.6);
+  animation: particleFloat var(--duration, 8s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes particleFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  25% { transform: translate(var(--x1, 30px), var(--y1, -50px)) scale(1.2); opacity: 1; }
+  50% { transform: translate(var(--x2, -20px), var(--y2, -80px)) scale(0.8); opacity: 0.4; }
+  75% { transform: translate(var(--x3, 40px), var(--y3, -30px)) scale(1.1); opacity: 0.8; }
+}
+
+/* STM32 board glow */
+.board-glow {
+  filter: drop-shadow(0 0 20px rgba(99,102,241,0.7)) drop-shadow(0 0 40px rgba(139,92,246,0.4));
+}
+
+/* Input styling */
+.form-input {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border: 1px solid rgba(99,102,241,0.3) !important;
+  color: #e2e8f0 !important;
+  font-family: 'Exo 2', sans-serif !important;
+  transition: all 0.3s ease !important;
+}
+.form-input:focus {
+  border-color: rgba(99,102,241,0.8) !important;
+  box-shadow: 0 0 20px rgba(99,102,241,0.2) !important;
+  outline: none !important;
+}
+.form-input::placeholder { color: #475569 !important; }
