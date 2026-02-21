@@ -1,44 +1,42 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, ChevronLeft, Upload, Check, Loader2, AlertTriangle, QrCode, Cpu } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Upload, Check, Loader2, AlertTriangle, QrCode, Cpu, Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// Simple QR code SVG placeholder (static PaymentQR)
 function PaymentQR() {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="w-48 h-48 bg-white rounded-xl p-3 flex items-center justify-center relative overflow-hidden">
-        {/* Placeholder QR pattern */}
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <rect width="100" height="100" fill="white"/>
           {/* QR corner squares */}
           <rect x="5" y="5" width="25" height="25" rx="2" fill="#1e1b4b"/>
           <rect x="8" y="8" width="19" height="19" rx="1" fill="white"/>
           <rect x="11" y="11" width="13" height="13" rx="1" fill="#1e1b4b"/>
-          
+
           <rect x="70" y="5" width="25" height="25" rx="2" fill="#1e1b4b"/>
           <rect x="73" y="8" width="19" height="19" rx="1" fill="white"/>
           <rect x="76" y="11" width="13" height="13" rx="1" fill="#1e1b4b"/>
-          
+
           <rect x="5" y="70" width="25" height="25" rx="2" fill="#1e1b4b"/>
           <rect x="8" y="73" width="19" height="19" rx="1" fill="white"/>
           <rect x="11" y="76" width="13" height="13" rx="1" fill="#1e1b4b"/>
 
           {/* Data modules */}
-          {[35,40,45,50,55,60].map(x => 
-            [10,15,20,25,30,35,40,45].map(y => 
+          {[35,40,45,50,55,60].map(x =>
+            [10,15,20,25,30,35,40,45].map(y =>
               (x+y) % 13 !== 0 ? <rect key={`${x}-${y}`} x={x} y={y} width="4" height="4" fill="#1e1b4b"/> : null
             )
           )}
-          {[10,15,20,25,30].map(x => 
-            [50,55,60,65,70,75,80,85].map(y => 
+          {[10,15,20,25,30].map(x =>
+            [50,55,60,65,70,75,80,85].map(y =>
               (x*y) % 7 !== 0 ? <rect key={`${x}-${y}`} x={x} y={y} width="4" height="4" fill="#1e1b4b"/> : null
             )
           )}
-          {[50,55,60,65,70,75,80].map(x => 
-            [50,55,60,65,70,75,80,85].map(y => 
+          {[50,55,60,65,70,75,80].map(x =>
+            [50,55,60,65,70,75,80,85].map(y =>
               (x+y*2) % 11 !== 0 ? <rect key={`${x}-${y}`} x={x} y={y} width="4" height="4" fill="#1e1b4b"/> : null
             )
           )}
@@ -54,13 +52,13 @@ function PaymentQR() {
 }
 
 const FIELDS = {
-  firstName:      { label: 'First Name',      type: 'text',  placeholder: 'John' },
-  lastName:       { label: 'Last Name',       type: 'text',  placeholder: 'Doe' },
-  email:          { label: 'Email',           type: 'email', placeholder: 'john@example.com' },
-  mobile:         { label: 'Mobile Number',   type: 'tel',   placeholder: '+91 9XXXXXXXXX' },
-  college:        { label: 'College Name',    type: 'text',  placeholder: 'Chennai Institute of Technology' },
-  specialization: { label: 'Specialization',  type: 'text',  placeholder: 'Electronics & Communication' },
-  course:         { label: 'Course / Year',   type: 'text',  placeholder: 'B.E. – 3rd Year' },
+  firstName:      { label: 'First Name',     type: 'text',  placeholder: 'John' },
+  lastName:       { label: 'Last Name',      type: 'text',  placeholder: 'Doe' },
+  email:          { label: 'Email',          type: 'email', placeholder: 'john@example.com' },
+  mobile:         { label: 'Mobile Number',  type: 'tel',   placeholder: '+91 9XXXXXXXXX' },
+  college:        { label: 'College Name',   type: 'text',  placeholder: 'Chennai Institute of Technology' },
+  specialization: { label: 'Specialization', type: 'text',  placeholder: 'Electronics & Communication' },
+  course:         { label: 'Course / Year',  type: 'text',  placeholder: 'B.E. – 3rd Year' },
 };
 
 export default function RegistrationSection({ onClose }) {
@@ -69,17 +67,17 @@ export default function RegistrationSection({ onClose }) {
     firstName: '', lastName: '', email: '', mobile: '',
     college: '', specialization: '', course: '',
   });
-  const [errors, setErrors] = useState({});
-  const [kitOption, setKitOption] = useState('without-kit');
-  const [resume, setResume] = useState(null);
+  const [errors, setErrors]           = useState({});
+  const [kitOption, setKitOption]     = useState('without-kit');
+  const [resume, setResume]           = useState(null);
   const [transactionId, setTransactionId] = useState('');
-  const [paymentProof, setPaymentProof] = useState(null);
-  const [txError, setTxError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [paymentProof, setPaymentProof]   = useState(null);
+  const [txError, setTxError]         = useState('');
+  const [loading, setLoading]         = useState(false);
+  const [success, setSuccess]         = useState(false);
   const [submitError, setSubmitError] = useState('');
   const resumeRef = useRef();
-  const proofRef = useRef();
+  const proofRef  = useRef();
 
   const validate1 = () => {
     const errs = {};
@@ -163,7 +161,10 @@ export default function RegistrationSection({ onClose }) {
               <p className="font-body text-xs text-slate-500">STM32 Mastering Workshop</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+          >
             <X size={16} />
           </button>
         </div>
@@ -181,7 +182,9 @@ export default function RegistrationSection({ onClose }) {
                   }`}>
                     {step > i + 1 ? <Check size={13} /> : i + 1}
                   </div>
-                  <span className={`font-display text-xs tracking-wider ${step === i + 1 ? 'text-indigo-400' : 'text-slate-600'}`}>{s}</span>
+                  <span className={`font-display text-xs tracking-wider ${step === i + 1 ? 'text-indigo-400' : 'text-slate-600'}`}>
+                    {s}
+                  </span>
                 </div>
                 {i < 2 && <div className={`flex-1 h-px ${step > i + 1 ? 'bg-green-500/50' : 'bg-slate-700'}`} />}
               </React.Fragment>
@@ -191,6 +194,7 @@ export default function RegistrationSection({ onClose }) {
 
         <div className="px-8 pb-8 pt-4">
           <AnimatePresence mode="wait">
+
             {/* Success */}
             {success && (
               <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-12 text-center">
@@ -198,9 +202,7 @@ export default function RegistrationSection({ onClose }) {
                   <Check size={36} className="text-green-400" />
                 </div>
                 <h3 className="font-display text-xl font-black text-white mb-3 tracking-wider">REGISTRATION SUBMITTED!</h3>
-                <p className="font-body text-slate-300 text-base mb-2">
-                  Thank you for registering!
-                </p>
+                <p className="font-body text-slate-300 text-base mb-2">Thank you for registering!</p>
                 <p className="font-body text-slate-400 text-sm mb-8 max-w-sm mx-auto">
                   Your application is being processed. You'll receive a confirmation email once your payment is verified.
                 </p>
@@ -210,7 +212,10 @@ export default function RegistrationSection({ onClose }) {
                   <p className="font-body text-xs text-slate-400 mt-1">✓ Await approval & QR code for entry</p>
                   <p className="font-body text-xs text-slate-400 mt-1">✓ Arrive at CIT on March 5 by 9:00 AM</p>
                 </div>
-                <button onClick={onClose} className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white">
+                <button
+                  onClick={onClose}
+                  className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white"
+                >
                   CLOSE
                 </button>
               </motion.div>
@@ -223,7 +228,9 @@ export default function RegistrationSection({ onClose }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {Object.entries(FIELDS).map(([key, f]) => (
                     <div key={key} className={key === 'college' ? 'sm:col-span-2' : ''}>
-                      <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">{f.label} <span className="text-indigo-400">*</span></label>
+                      <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">
+                        {f.label} <span className="text-indigo-400">*</span>
+                      </label>
                       <input
                         type={f.type}
                         placeholder={f.placeholder}
@@ -238,7 +245,9 @@ export default function RegistrationSection({ onClose }) {
 
                 {/* Resume upload */}
                 <div className="mb-6">
-                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">Resume <span className="text-indigo-400">*</span> <span className="text-slate-600">(PDF/Image, max 1MB)</span></label>
+                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">
+                    Resume <span className="text-indigo-400">*</span> <span className="text-slate-600">(PDF/Image, max 1MB)</span>
+                  </label>
                   <div
                     onClick={() => resumeRef.current.click()}
                     className={`border-2 border-dashed ${errors.resume ? 'border-red-500/50' : 'border-indigo-500/30'} rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-indigo-500/60 hover:bg-indigo-950/20 transition-all`}
@@ -252,12 +261,21 @@ export default function RegistrationSection({ onClose }) {
                     ) : (
                       <p className="font-body text-sm text-slate-500">Click to upload resume</p>
                     )}
-                    <input ref={resumeRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={e => { setResume(e.target.files[0]); setErrors(p => ({ ...p, resume: '' })); }} />
+                    <input
+                      ref={resumeRef}
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="hidden"
+                      onChange={e => { setResume(e.target.files[0]); setErrors(p => ({ ...p, resume: '' })); }}
+                    />
                   </div>
                   {errors.resume && <p className="font-body text-xs text-red-400 mt-1">{errors.resume}</p>}
                 </div>
 
-                <button onClick={handleStep1} className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo hover:from-indigo-500 hover:to-violet-500 transition-all">
+                <button
+                  onClick={handleStep1}
+                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo hover:from-indigo-500 hover:to-violet-500 transition-all"
+                >
                   CONTINUE <ChevronRight size={16} />
                 </button>
               </motion.div>
@@ -271,7 +289,7 @@ export default function RegistrationSection({ onClose }) {
                 {/* Kit selection */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   {[
-                    { value: 'without-kit', label: 'Without Kit', price: '₹699', desc: 'Workshop access only' },
+                    { value: 'without-kit', label: 'Without Kit', price: '₹699',  desc: 'Workshop access only' },
                     { value: 'with-kit',    label: 'With Kit',    price: '₹1200', desc: 'Board + peripherals' },
                   ].map(opt => (
                     <button
@@ -295,7 +313,9 @@ export default function RegistrationSection({ onClose }) {
 
                 {/* QR code */}
                 <div className="glass border-glow rounded-2xl p-6 flex flex-col items-center mb-6">
-                  <p className="font-display text-xs text-slate-400 tracking-widest mb-4">PAY EXACTLY <span className="text-indigo-400 font-black text-lg">{kitOption === 'with-kit' ? '₹1200' : '₹699'}</span></p>
+                  <p className="font-display text-xs text-slate-400 tracking-widest mb-4">
+                    PAY EXACTLY <span className="text-indigo-400 font-black text-lg">{kitOption === 'with-kit' ? '₹1200' : '₹699'}</span>
+                  </p>
                   <PaymentQR />
                   <p className="font-body text-xs text-slate-500 mt-4 text-center max-w-xs">
                     Scan the QR code to complete payment. Save the transaction ID and screenshot after payment.
@@ -303,10 +323,16 @@ export default function RegistrationSection({ onClose }) {
                 </div>
 
                 <div className="flex gap-3">
-                  <button onClick={() => setStep(1)} className="px-5 py-3 rounded-xl border border-slate-700 font-display text-xs font-bold tracking-widest text-slate-400 flex items-center gap-2 hover:border-slate-600 transition-colors">
+                  <button
+                    onClick={() => setStep(1)}
+                    className="px-5 py-3 rounded-xl border border-slate-700 font-display text-xs font-bold tracking-widest text-slate-400 flex items-center gap-2 hover:border-slate-600 transition-colors"
+                  >
                     <ChevronLeft size={16} /> BACK
                   </button>
-                  <button onClick={() => setStep(3)} className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo">
+                  <button
+                    onClick={() => setStep(3)}
+                    className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo"
+                  >
                     I'VE PAID <ChevronRight size={16} />
                   </button>
                 </div>
@@ -327,7 +353,9 @@ export default function RegistrationSection({ onClose }) {
 
                 {/* Transaction ID */}
                 <div className="mb-6">
-                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">UPI Transaction ID <span className="text-indigo-400">*</span></label>
+                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">
+                    UPI Transaction ID <span className="text-indigo-400">*</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. T25030312345678901"
@@ -340,14 +368,17 @@ export default function RegistrationSection({ onClose }) {
 
                 {/* Payment proof upload */}
                 <div className="mb-6">
-                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">Payment Screenshot <span className="text-indigo-400">*</span> <span className="text-slate-600">(max 1MB)</span></label>
+                  <label className="block font-body text-xs text-slate-400 mb-1.5 tracking-wide">
+                    Payment Screenshot <span className="text-indigo-400">*</span> <span className="text-slate-600">(max 1MB)</span>
+                  </label>
                   <div
                     onClick={() => proofRef.current.click()}
                     className="border-2 border-dashed border-indigo-500/30 rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-indigo-500/60 hover:bg-indigo-950/20 transition-all"
                   >
                     {paymentProof ? (
                       <div className="text-center">
-                        <Image size={20} className="text-green-400 mx-auto mb-2" />
+                        {/* ✅ Fixed: ImageIcon instead of Image */}
+                        <ImageIcon size={20} className="text-green-400 mx-auto mb-2" />
                         <p className="font-body text-sm text-green-300 font-medium">{paymentProof.name}</p>
                         <p className="font-mono text-xs text-slate-500">{(paymentProof.size / 1024).toFixed(1)} KB</p>
                       </div>
@@ -358,7 +389,13 @@ export default function RegistrationSection({ onClose }) {
                         <p className="font-body text-xs text-slate-600">JPEG or PNG</p>
                       </>
                     )}
-                    <input ref={proofRef} type="file" accept=".jpg,.jpeg,.png" className="hidden" onChange={e => setPaymentProof(e.target.files[0])} />
+                    <input
+                      ref={proofRef}
+                      type="file"
+                      accept=".jpg,.jpeg,.png"
+                      className="hidden"
+                      onChange={e => setPaymentProof(e.target.files[0])}
+                    />
                   </div>
                 </div>
 
@@ -370,15 +407,27 @@ export default function RegistrationSection({ onClose }) {
                 )}
 
                 <div className="flex gap-3">
-                  <button onClick={() => setStep(2)} disabled={loading} className="px-5 py-3 rounded-xl border border-slate-700 font-display text-xs font-bold tracking-widest text-slate-400 flex items-center gap-2 hover:border-slate-600 transition-colors disabled:opacity-50">
+                  <button
+                    onClick={() => setStep(2)}
+                    disabled={loading}
+                    className="px-5 py-3 rounded-xl border border-slate-700 font-display text-xs font-bold tracking-widest text-slate-400 flex items-center gap-2 hover:border-slate-600 transition-colors disabled:opacity-50"
+                  >
                     <ChevronLeft size={16} /> BACK
                   </button>
-                  <button onClick={handleSubmit} disabled={loading} className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo disabled:opacity-70">
-                    {loading ? <><Loader2 size={16} className="animate-spin" /> SUBMITTING...</> : <>SUBMIT REGISTRATION <ChevronRight size={16} /></>}
+                  <button
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo disabled:opacity-70"
+                  >
+                    {loading
+                      ? <><Loader2 size={16} className="animate-spin" /> SUBMITTING...</>
+                      : <>SUBMIT REGISTRATION <ChevronRight size={16} /></>
+                    }
                   </button>
                 </div>
               </motion.div>
             )}
+
           </AnimatePresence>
         </div>
       </motion.div>
