@@ -1,44 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
 const Registration = require('../models/Registration');
-const { uploadResume, uploadPayment } = require('../middleware/upload');
-const { sendProcessingEmail } = require('../services/emailService');
 const { upload } = require('../middleware/upload');
-
-// Combined upload: resume + paymentProof
-const uploadFields = multer({
-  storage: require('../middleware/upload').uploadResume.storage,
-  limits: { fileSize: 1 * 1024 * 1024 },
-}).fields([
-  { name: 'resume', maxCount: 1 },
-  { name: 'paymentProof', maxCount: 1 },  
-]);
-
-// Dedicated multer instances
-const resumeStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const fs = require('fs');
-    const dir = path.join(__dirname, '..', 'uploads', 'resumes');
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-resume' + path.extname(file.originalname));
-  },
-});
-const paymentStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const fs = require('fs');
-    const dir = path.join(__dirname, '..', 'uploads', 'payments');
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-payment' + path.extname(file.originalname));
-  },
-});
+const { sendProcessingEmail } = require('../services/emailService');
 
 // Check duplicate transaction ID
 router.get('/check-transaction/:txId', async (req, res) => {
@@ -76,8 +40,6 @@ router.post('/', (req, res) => {
         firstName, lastName, email, mobile, college,
         specialization, course, kitOption, amount, transactionId,
         status: 'processing',
-
-        // Save file buffers directly to MongoDB
         resume: {
           data: req.files.resume[0].buffer,
           contentType: req.files.resume[0].mimetype,
