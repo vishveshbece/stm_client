@@ -176,7 +176,7 @@ function DetailModal({ reg, onClose }) {
           <div className="space-y-2">
             <p className="font-mono text-xs text-slate-600 tracking-wider">DOCUMENTS</p>
             {reg.resumePath && (
-              <a href={`${API}${reg.resumePath}`} target="_blank" rel="noreferrer"
+              <a href={`${API}/api/admin/registrations/${reg._id}/resume`} target="_blank" rel="noreferrer"
                 className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
                 <FileText size={16} className="text-indigo-400" />
                 <span className="font-body text-sm text-indigo-300 flex-1">View Resume</span>
@@ -184,7 +184,7 @@ function DetailModal({ reg, onClose }) {
               </a>
             )}
             {reg.paymentProofPath && (
-              <a href={`${API}${reg.paymentProofPath}`} target="_blank" rel="noreferrer"
+              <a href={`${API}/api/admin/registrations/${reg._id}/payment-proof`} target="_blank" rel="noreferrer"
                 className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
                 <Image size={16} className="text-indigo-400" />
                 <span className="font-body text-sm text-indigo-300 flex-1">View Payment Proof</span>
