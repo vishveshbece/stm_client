@@ -40,32 +40,6 @@ const paymentStorage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      const fs = require('fs');
-      const folder = file.fieldname === 'resume' ? 'resumes' : 'payments';
-      const dir = path.join(__dirname, '..', 'uploads', folder);
-      fs.mkdirSync(dir, { recursive: true });
-      cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-      const suffix = file.fieldname === 'resume' ? '-resume' : '-payment';
-      cb(null, Date.now() + suffix + path.extname(file.originalname));
-    },
-  }),
-  limits: { fileSize: 1 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (file.fieldname === 'resume') {
-      const ok = /jpeg|jpg|png|pdf/.test(path.extname(file.originalname).toLowerCase());
-      ok ? cb(null, true) : cb(new Error('Resume must be PDF or image'));
-    } else {
-      const ok = /jpeg|jpg|png/.test(path.extname(file.originalname).toLowerCase());
-      ok ? cb(null, true) : cb(new Error('Payment proof must be an image'));
-    }
-  },
-}).fields([{ name: 'resume', maxCount: 1 }, { name: 'paymentProof', maxCount: 1 }]);
-
 // Check duplicate transaction ID
 router.get('/check-transaction/:txId', async (req, res) => {
   try {
