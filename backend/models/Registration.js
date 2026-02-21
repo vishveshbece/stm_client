@@ -12,9 +12,20 @@ const registrationSchema = new mongoose.Schema({
   course:    { type: String, required: true, trim: true },
 
   // Files
-  resumePath:       { type: String },
-  paymentProofPath: { type: String },
-
+  resume: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
+  paymentProof: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
+  qrCode: {
+    data: Buffer,
+    contentType: String,
+  },
   // Payment
   kitOption:     { type: String, enum: ['with-kit', 'without-kit'], required: true },
   amount:        { type: Number, required: true },
@@ -30,7 +41,6 @@ const registrationSchema = new mongoose.Schema({
 
   // QR Code
   uniqueToken: { type: String, default: () => uuidv4() },
-  qrCodePath:  { type: String },
 
   // Attendance
   attendedDay1: { type: Boolean, default: false },

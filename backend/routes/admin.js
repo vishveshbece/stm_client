@@ -67,16 +67,11 @@ router.get('/registrations/:id', authMiddleware, async (req, res) => {
 });
 
 // Confirm/Approve registration
+// Replace the confirm route with this:
 router.post('/registrations/:id/confirm', authMiddleware, async (req, res) => {
   try {
     const reg = await Registration.findById(req.params.id);
     if (!reg) return res.status(404).json({ message: 'Not found' });
-
-    // Generate QR code image
-    const qrDir = path.join(__dirname, '..', 'qrcodes');
-    fs.mkdirSync(qrDir, { recursive: true });
-    const qrFilename = `qr-${reg.uniqueToken}.png`;
-    const qrPath = path.join(qrDir, qrFilename);
 
     const qrData = JSON.stringify({
       id: reg._id.toString(),
@@ -84,19 +79,24 @@ router.post('/registrations/:id/confirm', authMiddleware, async (req, res) => {
       name: `${reg.firstName} ${reg.lastName}`,
     });
 
-    await QRCode.toFile(qrPath, qrData, {
+    // Generate QR as buffer instead of file
+    const qrBuffer = await QRCode.toBuffer(qrData, {
       color: { dark: '#1e1b4b', light: '#ffffff' },
       width: 300,
       margin: 2,
     });
 
     reg.status = 'confirmed';
-    reg.qrCodePath = `/qrcodes/${qrFilename}`;
+    reg.qrCode = {
+      data: qrBuffer,
+      contentType: 'image/png',
+    };
     await reg.save();
 
-    sendConfirmationEmail(reg, qrPath).catch(e => console.error('Email error:', e));
+    // Pass buffer directly to email service
+    sendConfirmationEmail(reg, qrBuffer).catch(e => console.error('Email error:', e));
 
-    res.json({ message: 'Registration confirmed and email sent', qrCodePath: reg.qrCodePath });
+    res.json({ message: 'Registration confirmed and email sent' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -139,6 +139,33 @@ router.get('/stats', authMiddleware, async (req, res) => {
       Registration.countDocuments({ attendedDay2: true }),
     ]);
     res.json({ total, processing, confirmed, rejected, withKit, withoutKit, day1, day2 });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+// Add these two new routes to admin.js
+
+// Serve resume
+router.get('/registrations/:id/resume', authMiddleware, async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg?.resume?.data) return res.status(404).json({ message: 'File not found' });
+    res.set('Content-Type', reg.resume.contentType);
+    res.set('Content-Disposition', `inline; filename="${reg.resume.filename}"`);
+    res.send(reg.resume.data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Serve payment proof
+router.get('/registrations/:id/payment-proof', authMiddleware, async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg?.paymentProof?.data) return res.status(404).json({ message: 'File not found' });
+    res.set('Content-Type', reg.paymentProof.contentType);
+    res.set('Content-Disposition', `inline; filename="payment-proof"`);
+    res.send(reg.paymentProof.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

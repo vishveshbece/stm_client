@@ -5,6 +5,7 @@ const path = require('path');
 const Registration = require('../models/Registration');
 const { uploadResume, uploadPayment } = require('../middleware/upload');
 const { sendProcessingEmail } = require('../services/emailService');
+const { upload } = require('../middleware/upload');
 
 // Combined upload: resume + paymentProof
 const uploadFields = multer({
@@ -12,7 +13,7 @@ const uploadFields = multer({
   limits: { fileSize: 1 * 1024 * 1024 },
 }).fields([
   { name: 'resume', maxCount: 1 },
-  { name: 'paymentProof', maxCount: 1 },
+  { name: 'paymentProof', maxCount: 1 },  
 ]);
 
 // Dedicated multer instances
@@ -78,9 +79,7 @@ router.get('/check-transaction/:txId', async (req, res) => {
 // Submit registration with payment
 router.post('/', (req, res) => {
   upload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ message: err.message || 'File upload error' });
-    }
+    if (err) return res.status(400).json({ message: err.message });
 
     try {
       const {
@@ -88,37 +87,36 @@ router.post('/', (req, res) => {
         specialization, course, kitOption, transactionId,
       } = req.body;
 
-      // Validate required fields
-      if (!firstName || !lastName || !email || !mobile || !college || !specialization || !course || !kitOption || !transactionId) {
-        return res.status(400).json({ message: 'All fields are required' });
-      }
+      if (!req.files?.resume?.[0])
+        return res.status(400).json({ message: 'Resume is required' });
+      if (!req.files?.paymentProof?.[0])
+        return res.status(400).json({ message: 'Payment proof is required' });
 
-      // Check duplicate transaction ID
       const dupTx = await Registration.findOne({ transactionId });
-      if (dupTx) {
-        return res.status(409).json({ message: 'This Transaction ID has already been used. Please check and try again.' });
-      }
-
-      const resumePath = req.files?.resume?.[0]
-        ? `/uploads/resumes/${req.files.resume[0].filename}` : null;
-      const paymentProofPath = req.files?.paymentProof?.[0]
-        ? `/uploads/payments/${req.files.paymentProof[0].filename}` : null;
-
-      if (!resumePath) return res.status(400).json({ message: 'Resume is required' });
-      if (!paymentProofPath) return res.status(400).json({ message: 'Payment proof is required' });
+      if (dupTx)
+        return res.status(409).json({ message: 'This Transaction ID is already used.' });
 
       const amount = kitOption === 'with-kit' ? 1200 : 699;
 
       const reg = new Registration({
         firstName, lastName, email, mobile, college,
-        specialization, course, kitOption, amount,
-        transactionId, resumePath, paymentProofPath,
+        specialization, course, kitOption, amount, transactionId,
         status: 'processing',
+
+        // Save file buffers directly to MongoDB
+        resume: {
+          data: req.files.resume[0].buffer,
+          contentType: req.files.resume[0].mimetype,
+          filename: req.files.resume[0].originalname,
+        },
+        paymentProof: {
+          data: req.files.paymentProof[0].buffer,
+          contentType: req.files.paymentProof[0].mimetype,
+          filename: req.files.paymentProof[0].originalname,
+        },
       });
 
       await reg.save();
-
-      // Send processing email (don't block response)
       sendProcessingEmail(reg).catch(e => console.error('Email error:', e));
 
       res.status(201).json({
@@ -126,9 +124,8 @@ router.post('/', (req, res) => {
         id: reg._id,
       });
     } catch (err) {
-      if (err.code === 11000) {
-        return res.status(409).json({ message: 'This Transaction ID has already been used.' });
-      }
+      if (err.code === 11000)
+        return res.status(409).json({ message: 'Transaction ID already used.' });
       res.status(500).json({ message: err.message });
     }
   });

@@ -103,12 +103,16 @@ async function sendConfirmationEmail(reg, qrCodePath) {
   </div>`;
 
   const attachments = [];
-  if (qrCodePath && fs.existsSync(qrCodePath)) {
-    attachments.push({ filename: 'entry-qrcode.png', path: qrCodePath, cid: 'qrcode' });
+  if (qrBuffer) {
+    attachments.push({
+      filename: 'entry-qrcode.png',
+      content: qrBuffer,        // ← buffer instead of path
+      cid: 'qrcode',
+    });
   }
 
   await transporter.sendMail({
-    from: process.env.EMAIL_FROM || 'STM32 Workshop <no-reply@stm32workshop.com>',
+    from: process.env.EMAIL_FROM,
     to: reg.email,
     subject: '🎉 Confirmed! STM32 Mastering Workshop – Entry QR Code',
     html,
