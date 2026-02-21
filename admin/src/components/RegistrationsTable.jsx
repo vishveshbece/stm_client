@@ -175,7 +175,7 @@ function DetailModal({ reg, onClose }) {
           {/* Files */}
           <div className="space-y-2">
             <p className="font-mono text-xs text-slate-600 tracking-wider">DOCUMENTS</p>
-            {reg.resumePath && (
+            {reg.resume?.filename && (
               <a href={`${API}/api/admin/registrations/${reg._id}/resume`} target="_blank" rel="noreferrer"
                 className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
                 <FileText size={16} className="text-indigo-400" />
@@ -183,7 +183,7 @@ function DetailModal({ reg, onClose }) {
                 <ExternalLink size={13} className="text-slate-500" />
               </a>
             )}
-            {reg.paymentProofPath && (
+            {reg.paymentProof?.filename && (
               <a href={`${API}/api/admin/registrations/${reg._id}/payment-proof`} target="_blank" rel="noreferrer"
                 className="flex items-center gap-3 p-3 rounded-xl border border-indigo-500/20 hover:bg-indigo-950/30 transition-colors">
                 <Image size={16} className="text-indigo-400" />
@@ -191,8 +191,8 @@ function DetailModal({ reg, onClose }) {
                 <ExternalLink size={13} className="text-slate-500" />
               </a>
             )}
-            {reg.qrCodePath && (
-              <a href={`${API}${reg.qrCodePath}`} target="_blank" rel="noreferrer"
+            {reg.qrCode?.data && (
+              <a href={`${API}/api/admin/registrations/${reg._id}/qrcode`} target="_blank" rel="noreferrer"
                 className="flex items-center gap-3 p-3 rounded-xl border border-green-500/20 hover:bg-green-950/30 transition-colors">
                 <QrCode size={16} className="text-green-400" />
                 <span className="font-body text-sm text-green-300 flex-1">View Entry QR Code</span>

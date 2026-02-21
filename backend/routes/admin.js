@@ -170,5 +170,16 @@ router.get('/registrations/:id/payment-proof', authMiddleware, async (req, res) 
     res.status(500).json({ message: err.message });
   }
 });
-
+// Serve QR code
+router.get('/registrations/:id/qrcode', authMiddleware, async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg?.qrCode?.data)
+      return res.status(404).json({ message: 'QR code not found' });
+    res.set('Content-Type', 'image/png');
+    res.send(reg.qrCode.data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;

@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
-const path = require('path');
-const fs = require('fs');
+
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -68,7 +67,7 @@ async function sendProcessingEmail(reg) {
   });
 }
 
-async function sendConfirmationEmail(reg, qrCodePath) {
+async function sendConfirmationEmail(reg, qrBuffer) {
   const html = `
   <div style="${baseStyle}">
     <div style="${cardStyle}">
