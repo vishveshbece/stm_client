@@ -5,8 +5,8 @@ const authMiddleware = require('../middleware/auth');
 
 // Allowed dates for each day (IST)
 const ALLOWED_DATES = {
-  1: '2025-03-05',
-  2: '2025-03-06',
+  1: '2026-03-05',
+  2: '2026-03-06',
 };
 
 // Scan QR and mark attendance
