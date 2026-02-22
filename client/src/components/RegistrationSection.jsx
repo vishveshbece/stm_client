@@ -1,5 +1,5 @@
-import qrGpay    from './assets/pack1.png';   // Google Pay QR  (Without Kit — ₹699)
-import qrPhonePe from './assets/pack2.png';   // PhonePe QR     (With Kit   — ₹1200)
+import qrGpay    from '../assets/pack1.png';   // Google Pay QR  (Without Kit — ₹699)
+import qrPhonePe from '../assets/pack2.png';   // PhonePe QR     (With Kit   — ₹1200)
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

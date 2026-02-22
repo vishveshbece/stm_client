@@ -16,8 +16,8 @@ const BOARDS = [
 
 const EVENT_DETAILS = [
   { icon: Calendar, label: 'March 5 & 6', sub: '2025' },
-  { icon: Clock,    label: '9:00 AM',     sub: '3:00 PM Daily' },
-  { icon: MapPin,   label: 'CIT Chennai', sub: 'Chennai Institute of Tech' },
+  { icon: Clock,    label: '9:00 AM',     sub: '3:00 PM' },
+  { icon: MapPin,   label: 'CIT Chennai', sub: 'Chennai Institute of Technology' },
 ];
 
 const PROTOCOLS = ['UART', 'SPI', 'I²C', 'HAL', 'GPIO', 'PWM'];
