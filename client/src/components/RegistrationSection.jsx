@@ -1,5 +1,5 @@
-import qrGpay    from '../assets/pack1.png';   // Google Pay QR  (Without Kit — ₹699)
-import qrPhonePe from '../assets/pack2.png';   // PhonePe QR     (With Kit   — ₹1200)
+import qrGpay    from './assets/pack1.png';   // Google Pay QR  (Without Kit — ₹699)
+import qrPhonePe from './assets/pack2.png';   // PhonePe QR     (With Kit   — ₹1200)
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -698,12 +698,18 @@ export default function RegistrationSection({ onClose }) {
                   </motion.div>
                 )}
 
+                {!paymentProof && !proofError && (
+                  <p className="font-body text-xs text-slate-500 text-center mb-3">
+                    Upload your payment screenshot to enable submission
+                  </p>
+                )}
+
                 <div className="flex gap-3">
                   <button onClick={() => setStep(2)} disabled={loading}
                     className="px-5 py-3 rounded-xl border border-slate-700 font-display text-xs font-bold tracking-widest text-slate-400 flex items-center gap-2 hover:border-slate-600 transition-colors disabled:opacity-50">
                     <ChevronLeft size={16} /> BACK
                   </button>
-                  <button onClick={handleSubmit} disabled={loading || !!resumeError || !!proofError}
+                  <button onClick={handleSubmit} disabled={loading || !paymentProof || !!resumeError || !!proofError}
                     className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white flex items-center justify-center gap-2 glow-indigo disabled:opacity-60 disabled:cursor-not-allowed transition-all">
                     {loading
                       ? <><Loader2 size={16} className="animate-spin" /> SUBMITTING...</>
