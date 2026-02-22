@@ -552,7 +552,7 @@ export default function HeroSection({ onRegister }) {
           </p>
 
           <p className="font-body text-slate-400 text-base leading-relaxed mb-8 max-w-lg">
-            Executive Two-Day Intensive Program — hands-on STM32 development training
+            Exclusive 2-Days Intensive Program — hands-on STM32 development training
             and a strong career roadmap in Embedded Systems.
           </p>
 

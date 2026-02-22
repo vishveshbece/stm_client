@@ -54,6 +54,10 @@ const highlight = `
   font-size:14px;
 `;
 
+// ─── FIX 1: footer — was #374151 (gray-700) and #4f46e5 (indigo-600) on
+//   #0a0a1a (near-black) → both nearly invisible.
+//   Fixed: org name → #818cf8 (indigo-400), subtext → #64748b (slate-500)
+//   which gives ~4.5:1 and ~3.5:1 respectively on the very dark bg.
 const footer = `
   background:#0a0a1a;
   border-top:1px solid rgba(99,102,241,0.2);
@@ -61,27 +65,34 @@ const footer = `
   text-align:center;
 `;
 
+// ─── Shared table label style — centralised so one fix covers all tables.
+//   FIX 2: was #64748b (slate-500, ~3:1 on dark) → now #94a3b8 (slate-400, ~5:1)
+const tableLabel = `padding:5px 0;color:#94a3b8;font-size:13px;width:130px;`;
+const tableValue = `padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;`;
+
 // ─── Event Details Block (shared) ────────────────────────────────────────────
 
 const eventDetailsBlock = `
   <div style="${infoBox}">
-    <p style="margin:0 0 12px;color:#6366f1;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">EVENT DETAILS</p>
+    <!-- FIX 3: section label was #6366f1 (indigo-500, borderline ~3.5:1 on dark infoBox)
+         → now #818cf8 (indigo-400, ~5.5:1) used for all infoBox headings -->
+    <p style="margin:0 0 12px;color:#818cf8;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">EVENT DETAILS</p>
     <table style="width:100%;border-collapse:collapse;">
       <tr>
-        <td style="padding:5px 0;color:#64748b;font-size:13px;width:130px;">📅 Date</td>
-        <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">March 5 & 6, 2025</td>
+        <td style="${tableLabel}">📅 Date</td>
+        <td style="${tableValue}">March 5 & 6, 2025</td>
       </tr>
       <tr>
-        <td style="padding:5px 0;color:#64748b;font-size:13px;">⏰ Time</td>
-        <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">9:00 AM – 3:00 PM Daily</td>
+        <td style="${tableLabel}">⏰ Time</td>
+        <td style="${tableValue}">9:00 AM – 3:00 PM Daily</td>
       </tr>
       <tr>
-        <td style="padding:5px 0;color:#64748b;font-size:13px;">📍 Venue</td>
-        <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">Chennai Institute of Technology</td>
+        <td style="${tableLabel}">📍 Venue</td>
+        <td style="${tableValue}">Chennai Institute of Technology</td>
       </tr>
       <tr>
-        <td style="padding:5px 0;color:#64748b;font-size:13px;">🏛️ Organized by</td>
-        <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">IoT Centers of Excellence</td>
+        <td style="${tableLabel}">🏛️ Organized by</td>
+        <td style="${tableValue}">IoT Centers of Excellence</td>
       </tr>
     </table>
   </div>
@@ -89,13 +100,15 @@ const eventDetailsBlock = `
 
 const programHighlights = `
   <div style="${infoBox}border-left-color:#7c3aed;">
-    <p style="margin:0 0 14px;color:#7c3aed;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">PROGRAM HIGHLIGHTS</p>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>Hands-On Training with STM32 Development Board</span></div>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>Bare Metal Programming Concepts</span></div>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>STM32 HAL Architecture</span></div>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>Communication Protocols – UART | SPI | I2C</span></div>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>Peripheral Interfacing & Debugging</span></div>
-    <div style="${highlight}"><span style="color:#6366f1;font-size:16px;">⚡</span><span>Embedded Career Roadmap & Placement Strategy</span></div>
+    <!-- FIX 4: was #7c3aed (violet-600, ~2.5:1 on dark) → now #a78bfa (violet-400, ~6:1) -->
+    <p style="margin:0 0 14px;color:#a78bfa;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">PROGRAM HIGHLIGHTS</p>
+    <!-- FIX 5: highlight icons were #6366f1 (borderline) → now #818cf8 (indigo-400) -->
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Hands-On Training with STM32 Development Board</span></div>
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Bare Metal Programming Concepts</span></div>
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>STM32 HAL Architecture</span></div>
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Communication Protocols – UART | SPI | I2C</span></div>
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Peripheral Interfacing & Debugging</span></div>
+    <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Embedded Career Roadmap & Placement Strategy</span></div>
   </div>
 `;
 
@@ -109,16 +122,18 @@ const valueAdditions = `
 
 const coordinatorBlock = `
   <div style="background:rgba(15,23,42,0.8);border-radius:10px;padding:16px 20px;margin-top:20px;border:1px solid rgba(99,102,241,0.15);">
-    <p style="margin:0 0 6px;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;">PROGRAM COORDINATOR</p>
+    <!-- FIX 6: label was #64748b (~3:1) → now #94a3b8 (~5:1) -->
+    <p style="margin:0 0 6px;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;">PROGRAM COORDINATOR</p>
     <p style="margin:0;color:#e2e8f0;font-size:14px;font-weight:600;">Edward Paul Raj</p>
-    <p style="margin:4px 0 0;color:#6366f1;font-size:13px;">📞 9894923662</p>
+    <p style="margin:4px 0 0;color:#818cf8;font-size:13px;">📞 9894923662</p>
   </div>
 `;
 
+// FIX 1 applied here — footer text colors lifted for dark background
 const footerBlock = `
   <div style="${footer}">
-    <p style="margin:0 0 4px;color:#4f46e5;font-size:12px;font-weight:700;letter-spacing:1px;">IOT CENTERS OF EXCELLENCE</p>
-    <p style="margin:0;color:#374151;font-size:12px;">Chennai Institute of Technology · STM32 Mastering Workshop 2025</p>
+    <p style="margin:0 0 4px;color:#818cf8;font-size:12px;font-weight:700;letter-spacing:1px;">IOT CENTERS OF EXCELLENCE</p>
+    <p style="margin:0;color:#64748b;font-size:12px;">Chennai Institute of Technology · STM32 Mastering Workshop 2025</p>
   </div>
 `;
 
@@ -175,26 +190,26 @@ async function sendProcessingEmail(reg) {
 
       <!-- Registration Summary -->
       <div style="${infoBox}">
-        <p style="margin:0 0 12px;color:#6366f1;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REGISTRATION SUMMARY</p>
+        <p style="margin:0 0 12px;color:#818cf8;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REGISTRATION SUMMARY</p>
         <table style="width:100%;border-collapse:collapse;">
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;width:130px;">👤 Name</td>
-            <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">${reg.firstName} ${reg.lastName}</td>
+            <td style="${tableLabel}">👤 Name</td>
+            <td style="${tableValue}">${reg.firstName} ${reg.lastName}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">📧 Email</td>
+            <td style="${tableLabel}">📧 Email</td>
             <td style="padding:5px 0;color:#e2e8f0;font-size:13px;">${reg.email}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">💼 Package</td>
+            <td style="${tableLabel}">💼 Package</td>
             <td style="padding:5px 0;color:#a5b4fc;font-size:13px;font-weight:600;">${reg.kitOption === 'with-kit' ? 'With Complete Kit (₹1200)' : 'Without Kit (₹699)'}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">🔖 Transaction ID</td>
+            <td style="${tableLabel}">🔖 Transaction ID</td>
             <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-family:monospace;">${reg.transactionId}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">📊 Status</td>
+            <td style="${tableLabel}">📊 Status</td>
             <td style="padding:5px 0;"><span style="background:rgba(245,158,11,0.2);color:#fbbf24;border-radius:20px;padding:2px 12px;font-size:12px;font-weight:700;">PROCESSING</span></td>
           </tr>
         </table>
@@ -208,10 +223,10 @@ async function sendProcessingEmail(reg) {
 
       <!-- Next Steps -->
       <div style="${infoBox}border-left-color:#0d9488;">
-        <p style="margin:0 0 12px;color:#0d9488;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">NEXT STEPS</p>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>Our team will verify your payment within 24 hours</span></div>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>You will receive a confirmation email with your unique entry QR code</span></div>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>Arrive at Chennai Institute of Technology by 9:00 AM on March 5</span></div>
+        <p style="margin:0 0 12px;color:#2dd4bf;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">NEXT STEPS</p>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Our team will verify your payment within 24 hours</span></div>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>You will receive a confirmation email with your unique entry QR code</span></div>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Arrive at Chennai Institute of Technology by 9:00 AM on March 5</span></div>
       </div>
 
       ${coordinatorBlock}
@@ -259,31 +274,34 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       </p>
 
       <!-- QR Code Section -->
-      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:28px;text-align:center;margin:20px 0;">
-        <p style="margin:0 0 16px;color:#059669;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR UNIQUE ENTRY QR CODE</p>
-        <img src="cid:qrcode" alt="Entry QR Code" style="width:180px;height:180px;border-radius:12px;border:3px solid rgba(16,185,129,0.3);"/>
-        <p style="margin:12px 0 0;color:#374151;font-size:11px;font-family:monospace;letter-spacing:1px;">${reg.uniqueToken}</p>
-        <p style="margin:8px 0 0;color:#64748b;font-size:12px;">Present this QR code at the venue entrance</p>
+      <!-- FIX 7: uniqueToken was color:#374151 (gray-700) on near-white bg → nearly invisible.
+           Fixed bg to solid dark + token text to #a5b4fc (readable light indigo).
+           QR sub-text was #64748b on light bg → now white bg section uses #475569 which is fine. -->
+      <div style="background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:28px;text-align:center;margin:20px 0;">
+        <p style="margin:0 0 16px;color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR UNIQUE ENTRY QR CODE</p>
+        <img src="cid:qrcode" alt="Entry QR Code" style="width:180px;height:180px;border-radius:12px;border:3px solid rgba(16,185,129,0.4);background:#fff;"/>
+        <p style="margin:12px 0 0;color:#a5b4fc;font-size:11px;font-family:monospace;letter-spacing:1px;">${reg.uniqueToken}</p>
+        <p style="margin:8px 0 0;color:#94a3b8;font-size:12px;">Present this QR code at the venue entrance</p>
       </div>
 
       <!-- Registration Summary -->
       <div style="${infoBox}border-left-color:#059669;">
-        <p style="margin:0 0 12px;color:#059669;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR REGISTRATION</p>
+        <p style="margin:0 0 12px;color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR REGISTRATION</p>
         <table style="width:100%;border-collapse:collapse;">
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;width:130px;">👤 Name</td>
-            <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;">${reg.firstName} ${reg.lastName}</td>
+            <td style="${tableLabel}">👤 Name</td>
+            <td style="${tableValue}">${reg.firstName} ${reg.lastName}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">💼 Package</td>
+            <td style="${tableLabel}">💼 Package</td>
             <td style="padding:5px 0;color:#6ee7b7;font-size:13px;font-weight:600;">${reg.kitOption === 'with-kit' ? 'With Complete Kit (₹1200)' : 'Without Kit (₹699)'}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">🔖 Transaction ID</td>
+            <td style="${tableLabel}">🔖 Transaction ID</td>
             <td style="padding:5px 0;color:#e2e8f0;font-size:13px;font-family:monospace;">${reg.transactionId}</td>
           </tr>
           <tr>
-            <td style="padding:5px 0;color:#64748b;font-size:13px;">📊 Status</td>
+            <td style="${tableLabel}">📊 Status</td>
             <td style="padding:5px 0;"><span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:20px;padding:2px 12px;font-size:12px;font-weight:700;">CONFIRMED ✓</span></td>
           </tr>
         </table>
@@ -296,7 +314,7 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       <!-- Kit Info if applicable -->
       ${reg.kitOption === 'with-kit' ? `
       <div style="${infoBox}border-left-color:#7c3aed;">
-        <p style="margin:0 0 12px;color:#7c3aed;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR KIT INCLUDES</p>
+        <p style="margin:0 0 12px;color:#a78bfa;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR KIT INCLUDES</p>
         <div style="${highlight}"><span style="color:#a78bfa;">📦</span><span>STM32 Development Board (Nucleo-64)</span></div>
         <div style="${highlight}"><span style="color:#a78bfa;">📦</span><span>Starter Peripheral Modules</span></div>
         <div style="${highlight}"><span style="color:#a78bfa;">📦</span><span>USB Micro-B Cable</span></div>
@@ -306,8 +324,9 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       <hr style="${divider}"/>
 
       <!-- Important Reminders -->
-      <div style="${infoBox}border-left-color:#f59e0b;background:rgba(245,158,11,0.05);">
-        <p style="margin:0 0 12px;color:#f59e0b;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">⚠️ IMPORTANT REMINDERS</p>
+      <!-- FIX 8: reminder label was #f59e0b (amber-500, ~3.5:1 on dark infoBox) → now #fbbf24 (amber-400, ~5:1) -->
+      <div style="${infoBox}border-left-color:#f59e0b;background:rgba(245,158,11,0.07);">
+        <p style="margin:0 0 12px;color:#fbbf24;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">⚠️ IMPORTANT REMINDERS</p>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Carry this QR code (digital or printed) for entry</span></div>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Arrive at least 15 minutes before 9:00 AM</span></div>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Bring your college ID card</span></div>
@@ -365,17 +384,21 @@ async function sendRejectionEmail(reg, reason) {
       </p>
 
       <!-- Reason Box -->
-      <div style="${infoBox}border-left-color:#dc2626;background:rgba(220,38,38,0.05);">
-        <p style="margin:0 0 8px;color:#dc2626;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REASON FOR REJECTION</p>
+      <!-- FIX 9: reason label was #dc2626 (red-600, ~2.5:1) on dark infoBox bg → now #f87171 (red-400, ~5.5:1).
+           Reason text was #fca5a5 → kept, good contrast on dark.
+           Background was rgba(220,38,38,0.05) which made it look very light — bumped to 0.1 for definition. -->
+      <div style="${infoBox}border-left-color:#dc2626;background:rgba(220,38,38,0.1);">
+        <p style="margin:0 0 8px;color:#f87171;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REASON FOR REJECTION</p>
         <p style="margin:0;color:#fca5a5;font-size:14px;line-height:1.6;">${reason}</p>
       </div>
 
       <!-- What to do next -->
-      <div style="${infoBox}border-left-color:#0d9488;background:rgba(13,148,136,0.05);">
-        <p style="margin:0 0 12px;color:#0d9488;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">WHAT YOU CAN DO</p>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>Double-check your payment details and transaction ID</span></div>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>Contact our coordinator directly for assistance</span></div>
-        <div style="${highlight}"><span style="color:#14b8a6;">✦</span><span>Re-register with correct information if needed</span></div>
+      <!-- FIX 10: label was #0d9488 (teal-700, ~3:1 on dark) → now #2dd4bf (teal-400, ~6:1) -->
+      <div style="${infoBox}border-left-color:#0d9488;background:rgba(13,148,136,0.08);">
+        <p style="margin:0 0 12px;color:#2dd4bf;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">WHAT YOU CAN DO</p>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Double-check your payment details and transaction ID</span></div>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Contact our coordinator directly for assistance</span></div>
+        <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Re-register with correct information if needed</span></div>
       </div>
 
       ${eventDetailsBlock}

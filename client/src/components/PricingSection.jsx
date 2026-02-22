@@ -2,9 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, Package, Cpu } from 'lucide-react';
 
-/* ─────────────────────────────────────────
-   Static data — outside component
-───────────────────────────────────────── */
 const kitIncludes = [
   'STM32 Development Board (Nucleo-64)',
   'Starter Peripheral Modules',
@@ -21,21 +18,11 @@ const bothInclude = [
   'Expert Mentoring',
 ];
 
-/* ─────────────────────────────────────────
-   Shared card entry variants
-   FIX: explicit duration (0.5s) instead of
-   Framer default 0.3s — feels less abrupt.
-   direction prop lets each card slide from
-   its own side without duplicating variants.
-───────────────────────────────────────── */
 const cardVariants = (direction) => ({
   hidden:  { opacity: 0, x: direction === 'left' ? -32 : 32 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 });
 
-/* ─────────────────────────────────────────
-   Reusable feature-list row
-───────────────────────────────────────── */
 function FeatureRow({ label, iconBg, iconBorder, iconColor, textColor }) {
   return (
     <div className="flex items-center gap-3">
@@ -47,62 +34,52 @@ function FeatureRow({ label, iconBg, iconBorder, iconColor, textColor }) {
   );
 }
 
-/* ─────────────────────────────────────────
-   Pricing Section
-───────────────────────────────────────── */
 export default function PricingSection({ onRegister }) {
   return (
-    <section id="pricing" className="py-24 relative">
+    <section id="pricing" className="py-10 relative">
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* ── Section header ── */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          /* FIX: added amount:0.3 — header fires as soon as 30% is
-             visible; without this it triggers too late on mobile */
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
-          <h2 className="font-display text-3xl md:text-4xl font-black text-white mb-4">
+          <h2 className="font-display text-3xl md:text-4xl font-black text-white mb-3">
             Choose Your{' '}
             <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
               Package
             </span>
           </h2>
-          <p className="font-body text-slate-400">
+          <p className="font-body text-slate-400 text-sm">
             Both options include full workshop access and value additions
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
 
-          {/* ── Card 1: Without Kit ── */}
+          {/* Card 1: Without Kit */}
           <motion.div
             variants={cardVariants('left')}
             initial="hidden"
             whileInView="visible"
-            /* FIX: amount:0.2 so it fires when 20% of card is visible
-               on mobile — avoids the card never animating if viewport
-               is shorter than the card height */
             viewport={{ once: true, amount: 0.2 }}
-            /* FIX: whileHover on a plain card (no overflow-hidden or
-               absolute children) is safe — kept as-is */
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="glass border border-slate-700/40 rounded-2xl p-8 relative"
+            className="glass border border-slate-700/40 rounded-2xl p-6 relative"
           >
             <div className="flex items-center gap-3 mb-2">
-              <Cpu size={20} className="text-slate-400" />
+              <Cpu size={18} className="text-slate-400" />
               <p className="font-display text-xs tracking-widest text-slate-400">WITHOUT KIT</p>
             </div>
 
-            <div className="flex items-end gap-2 mb-6">
+            <div className="flex items-end gap-2 mb-5">
               <span className="font-display text-5xl font-black text-white">₹699</span>
               <span className="font-body text-slate-500 mb-2">/ person</span>
             </div>
 
-            <div className="space-y-3 mb-8">
+            <div className="space-y-2.5 mb-6">
               {bothInclude.map(item => (
                 <FeatureRow
                   key={item}
@@ -115,8 +92,6 @@ export default function PricingSection({ onRegister }) {
               ))}
             </div>
 
-            {/* FIX: upgraded to motion.button for consistent
-                interaction feedback matching the featured card */}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
@@ -127,44 +102,35 @@ export default function PricingSection({ onRegister }) {
             </motion.button>
           </motion.div>
 
-          {/* ── Card 2: With Kit (featured) ── */}
-          {/* FIX: whileHover y-lift on a card with overflow-hidden +
-              absolute gradient borders causes the glow border to clip.
-              Solution: move overflow-hidden + absolute layers into an
-              inner wrapper, keep the outer motion.div clean for hover. */}
+          {/* Card 2: With Kit (featured) */}
           <motion.div
             variants={cardVariants('right')}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            /* No overflow-hidden here — the gradient border lives inside */
             className="relative rounded-2xl"
           >
-            {/* Gradient border layers — isolated inside, not on outer div */}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl pointer-events-none" />
             <div className="absolute inset-[1.5px] bg-gradient-to-br from-slate-900 to-indigo-950 rounded-[14px] pointer-events-none" />
 
-            {/* All content sits above the border layers */}
-            <div className="relative p-8">
+            <div className="relative p-6">
 
-              {/* FIX: badge moved outside overflow-hidden context so it
-                  never gets clipped; z-10 keeps it above border layers */}
               <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-gradient-to-r from-indigo-500 to-violet-600 rounded-full shadow-lg shadow-indigo-500/30">
                 <span className="font-mono text-xs font-bold text-white tracking-widest">RECOMMENDED</span>
               </div>
 
               <div className="flex items-center gap-3 mb-2">
-                <Package size={20} className="text-indigo-400" />
+                <Package size={18} className="text-indigo-400" />
                 <p className="font-display text-xs tracking-widest text-indigo-400">WITH COMPLETE KIT</p>
               </div>
 
-              <div className="flex items-end gap-2 mb-6">
+              <div className="flex items-end gap-2 mb-5">
                 <span className="font-display text-5xl font-black text-white">₹1200</span>
                 <span className="font-body text-slate-400 mb-2">/ person</span>
               </div>
 
-              <div className="space-y-3 mb-8">
+              <div className="space-y-2.5 mb-6">
                 {bothInclude.map(item => (
                   <FeatureRow
                     key={item}
@@ -176,9 +142,8 @@ export default function PricingSection({ onRegister }) {
                   />
                 ))}
 
-                {/* Kit-specific items */}
                 <div className="pt-3 mt-3 border-t border-indigo-500/20 space-y-2">
-                  <p className="font-mono text-xs text-indigo-400 tracking-wider mb-3">
+                  <p className="font-mono text-xs text-indigo-400 tracking-wider mb-2">
                     + KIT INCLUDES:
                   </p>
                   {kitIncludes.map(item => (
@@ -194,9 +159,6 @@ export default function PricingSection({ onRegister }) {
                 </div>
               </div>
 
-              {/* FIX: removed transition-all (conflicts with gradient
-                  hover in Safari/Firefox). Use transition-colors only
-                  for the colour shift; scale handled by Framer */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

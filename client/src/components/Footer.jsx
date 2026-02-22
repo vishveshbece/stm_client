@@ -3,7 +3,7 @@ import { Cpu, Phone, MapPin, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative border-t border-slate-800/60 py-16 overflow-hidden">
+    <footer id="contact" className="relative border-t border-slate-800/60 py-10 overflow-hidden">
 
       {/* Subtle background glow */}
       <div
@@ -17,11 +17,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
         {/* ── 3-column grid ── */}
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
 
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3">
               <div className="relative">
                 <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center">
                   <Cpu size={18} className="text-white" />
@@ -45,22 +45,24 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-display text-xs font-bold text-slate-400 tracking-widest mb-5">
+            <h3 className="font-display text-xs font-bold text-slate-400 tracking-widest mb-4">
               CONTACT
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-7 h-7 rounded-lg bg-indigo-950 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Phone size={13} className="text-indigo-400" />
                 </div>
                 <div>
-                  <p className="font-body text-sm text-slate-300 font-medium">Student Co-ordinator</p>
-                  <a
-                    href="tel:9894923662"
-                    className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
-                  >
-                    9894923662
-                  </a>
+                  <p className="font-body text-sm text-slate-400 font-medium">Student Co-ordinator</p>
+                  <p className="font-body text-sm text-slate-400 font-medium">POOJAA SRi S –{' '}
+                    <a
+                      href="tel:9106689525"
+                      className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                    >
+                      9106689525
+                    </a>
+                  </p>
                 </div>
               </div>
 
@@ -68,10 +70,16 @@ export default function Footer() {
                 <div className="w-7 h-7 rounded-lg bg-indigo-950 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <MapPin size={13} className="text-indigo-400" />
                 </div>
-                <p className="font-body text-sm text-slate-400 leading-snug">
+                <a
+                  href="https://www.google.com/maps/place/Chennai+Institute+of+Technology"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-sm text-slate-400 leading-snug hover:text-indigo-400 transition-colors"
+                >
                   Chennai Institute of Technology,<br />
-                  Chennai, Tamil Nadu
-                </p>
+                  Sarathy nagar,<br />
+                  Kundrathur, Chennai - 600069
+                </a>
               </div>
 
               <div className="flex items-start gap-3">
@@ -90,39 +98,36 @@ export default function Footer() {
 
           {/* Organizers */}
           <div>
-            <h3 className="font-display text-xs font-bold text-slate-400 tracking-widest mb-5">
+            <h3 className="font-display text-xs font-bold text-slate-400 tracking-widest mb-4">
               ORGANIZERS
             </h3>
             <p className="font-body text-sm text-slate-300 font-semibold mb-1">
               IoT Centers of Excellence
             </p>
-            <p className="font-body text-sm text-slate-400 mb-6">
+            <p className="font-body text-sm text-slate-400 mb-4">
               Chennai Institute of Technology
             </p>
 
             {/* Event date badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 mb-3">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
               <span className="font-mono text-xs text-indigo-400">March 5 & 6, 2025</span>
             </div>
 
-            {/* Time info */}
-            <p className="font-body text-xs text-slate-600 block">
+            {/* Time info — contrast fixed: slate-600 → slate-500 */}
+            <p className="font-body text-xs text-slate-500 block">
               9:00 AM – 3:00 PM both days
             </p>
           </div>
         </div>
 
-        {/* ── Copyright bar — OUTSIDE the grid ── */}
-        <div className="border-t border-slate-800/60 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          {/* FIX: text-slate-600 (~2.4:1 contrast) → text-slate-400 (~5.5:1, passes WCAG AA) */}
+        {/* ── Copyright bar ── */}
+        <div className="border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-body text-xs text-slate-400">
             © 2025 STM32 Mastering Workshop · IoT Centers of Excellence · Chennai Institute of Technology
           </p>
           <div className="flex items-center gap-1.5">
-            {/* FIX: dot opacity /60 → full indigo-400 so it reads at small size */}
             <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-            {/* FIX: text-slate-700 (~1.8:1 contrast) → text-slate-500 (~4.1:1) */}
             <span className="font-mono text-xs text-slate-500">v1.0.0</span>
           </div>
         </div>
