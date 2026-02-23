@@ -241,7 +241,6 @@ async function sendProcessingEmail(reg) {
       ${eventDetailsBlock}
       ${programHighlights}
       ${valueAdditions}
-      ${whatsappBlock}
 
       <hr style="${divider}"/>
 
@@ -415,7 +414,6 @@ async function sendRejectionEmail(reg, reason) {
       </div>
 
       ${eventDetailsBlock}
-      ${whatsappBlock}
 
       <hr style="${divider}"/>
 
