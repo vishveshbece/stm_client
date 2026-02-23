@@ -8,25 +8,19 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-// ─── CIT Logo (loaded once at module level) ───────────────────────────────────
+// ─── CIT Logo (loaded once, embedded as base64 data URL) ─────────────────────
+// Using data URL instead of CID attachment because Brevo's API does not support
+// inline CID images — they appear as separate attachments instead of rendering.
 
 const citLogoPath = path.join(__dirname, 'assets', 'cit_logo.png');
 const citLogoBase64 = fs.readFileSync(citLogoPath).toString('base64');
+const citLogoDataUrl = `data:image/png;base64,${citLogoBase64}`;
 
-const citLogoAttachment = {
-  content: citLogoBase64,
-  name: 'cit_logo.png',
-};
+const citLogoImg = `<img src="${citLogoDataUrl}" alt="Chennai Institute of Technology" style="height:64px;width:auto;margin-bottom:16px;object-fit:contain;" />`;
 
-// CID reference used in HTML
-const citLogoCid = 'cit_logo';
-
-const citLogoImg = `<img src="cid:${citLogoCid}" alt="Chennai Institute of Technology" style="height:64px;width:auto;margin-bottom:16px;object-fit:contain;" />`;
-
-// ─── Shared Styles ───────────────────────────────────────────────────────────
+// ─── Shared Styles ────────────────────────────────────────────────────────────
 
 const base = `font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:0;background:#030712;`;
-
 const wrapper = `max-width:620px;margin:0 auto;background:#030712;padding:32px 16px;`;
 
 const card = `
@@ -81,7 +75,7 @@ const footer = `
 const tableLabel = `padding:5px 0;color:#94a3b8;font-size:13px;width:130px;`;
 const tableValue = `padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;`;
 
-// ─── Event Details Block (shared) ────────────────────────────────────────────
+// ─── Shared Blocks ────────────────────────────────────────────────────────────
 
 const eventDetailsBlock = `
   <div style="${infoBox}">
@@ -144,6 +138,17 @@ const footerBlock = `
   </div>
 `;
 
+const whatsappBlock = `
+  <div style="background:linear-gradient(135deg,rgba(37,211,102,0.12) 0%,rgba(18,140,126,0.12) 100%);border:1px solid rgba(37,211,102,0.3);border-radius:16px;padding:24px;text-align:center;margin:20px 0;">
+    <p style="margin:0 0 6px;color:#25d366;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">📢 JOIN OUR WHATSAPP GROUP</p>
+    <p style="margin:0 0 16px;color:#94a3b8;font-size:13px;line-height:1.6;">Stay updated with workshop schedules, announcements, and last-minute info by joining our official WhatsApp group.</p>
+    <a href="https://chat.whatsapp.com/I7iRsI9Pma89sPPVOzYC8n?mode=gi_t"
+       style="display:inline-block;background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 28px;border-radius:25px;letter-spacing:0.5px;">
+      💬 Join WhatsApp Group
+    </a>
+  </div>
+`;
+
 // ─── API Sender ───────────────────────────────────────────────────────────────
 
 async function sendViaApi(options) {
@@ -155,13 +160,9 @@ async function sendViaApi(options) {
     email: process.env.EMAIL_FROM || 'vishveshbece@gmail.com',
   };
   sendSmtpEmail.to = [{ email: options.to }];
-
-  // Always include CIT logo + any extra attachments
-  const baseAttachments = [citLogoAttachment];
-  sendSmtpEmail.attachment = options.attachments
-    ? [...baseAttachments, ...options.attachments]
-    : baseAttachments;
-
+  if (options.attachments && options.attachments.length > 0) {
+    sendSmtpEmail.attachment = options.attachments;
+  }
   try {
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent. Message ID:', data.messageId);
@@ -180,7 +181,6 @@ async function sendProcessingEmail(reg) {
   <div style="${wrapper}">
   <div style="${card}">
 
-    <!-- Header -->
     <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);padding:40px 32px;text-align:center;">
       ${citLogoImg}
       <p style="margin:0 0 8px;color:#c4b5fd;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
@@ -189,18 +189,16 @@ async function sendProcessingEmail(reg) {
       <p style="margin:0;color:#a5b4fc;font-size:13px;letter-spacing:1px;">ROADMAP TO SECURE AN EMBEDDED PLACEMENT</p>
     </div>
 
-    <!-- Body -->
     <div style="${sectionPad}">
       <div style="${tag}">REGISTRATION RECEIVED</div>
       <h2 style="margin:0 0 8px;color:#818cf8;font-size:20px;">Your Application is Being Processed 🎉</h2>
       <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin:0 0 20px;">
         Dear <strong style="color:#e2e8f0;">${reg.firstName} ${reg.lastName}</strong>,<br/><br/>
-        Thank you for registering for the <strong style="color:#a5b4fc;">STM32 Mastering Workshop</strong>. 
+        Thank you for registering for the <strong style="color:#a5b4fc;">STM32 Mastering Workshop</strong>.
         We have received your application and payment details. Our team is currently reviewing your submission.
         You will receive a confirmation email once your payment is verified.
       </p>
 
-      <!-- Registration Summary -->
       <div style="${infoBox}">
         <p style="margin:0 0 12px;color:#818cf8;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REGISTRATION SUMMARY</p>
         <table style="width:100%;border-collapse:collapse;">
@@ -233,7 +231,6 @@ async function sendProcessingEmail(reg) {
 
       <hr style="${divider}"/>
 
-      <!-- Next Steps -->
       <div style="${infoBox}border-left-color:#0d9488;">
         <p style="margin:0 0 12px;color:#2dd4bf;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">NEXT STEPS</p>
         <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Our team will verify your payment within 24 hours</span></div>
@@ -264,7 +261,6 @@ async function sendConfirmationEmail(reg, qrBuffer) {
   <div style="${wrapper}">
   <div style="${card}">
 
-    <!-- Header -->
     <div style="background:linear-gradient(135deg,#059669 0%,#0d9488 100%);padding:40px 32px;text-align:center;">
       ${citLogoImg}
       <p style="margin:0 0 8px;color:#a7f3d0;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
@@ -275,18 +271,16 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       </div>
     </div>
 
-    <!-- Body -->
     <div style="${sectionPad}">
       <div style="${tag}background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.4);color:#6ee7b7;">REGISTRATION CONFIRMED</div>
       <h2 style="margin:0 0 8px;color:#34d399;font-size:20px;">Congratulations! Your Spot is Secured ✨</h2>
       <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin:0 0 20px;">
         Dear <strong style="color:#e2e8f0;">${reg.firstName} ${reg.lastName}</strong>,<br/><br/>
-        Your registration for the <strong style="color:#6ee7b7;">STM32 Mastering Workshop</strong> has been 
-        <strong style="color:#34d399;">confirmed</strong>! 
+        Your registration for the <strong style="color:#6ee7b7;">STM32 Mastering Workshop</strong> has been
+        <strong style="color:#34d399;">confirmed</strong>!
         Your unique entry QR code is attached to this email. Please present it at the venue entrance for attendance marking.
       </p>
 
-      <!-- QR Code Section -->
       <div style="background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:28px;text-align:center;margin:20px 0;">
         <p style="margin:0 0 16px;color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR UNIQUE ENTRY QR CODE</p>
         <img src="cid:qrcode" alt="Entry QR Code" style="width:180px;height:180px;border-radius:12px;border:3px solid rgba(16,185,129,0.4);background:#fff;"/>
@@ -294,7 +288,6 @@ async function sendConfirmationEmail(reg, qrBuffer) {
         <p style="margin:8px 0 0;color:#94a3b8;font-size:12px;">Present this QR code at the venue entrance</p>
       </div>
 
-      <!-- Registration Summary -->
       <div style="${infoBox}border-left-color:#059669;">
         <p style="margin:0 0 12px;color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR REGISTRATION</p>
         <table style="width:100%;border-collapse:collapse;">
@@ -321,7 +314,6 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       ${programHighlights}
       ${valueAdditions}
 
-      <!-- Kit Info if applicable -->
       ${reg.kitOption === 'with-kit' ? `
       <div style="${infoBox}border-left-color:#7c3aed;">
         <p style="margin:0 0 12px;color:#a78bfa;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR KIT INCLUDES</p>
@@ -333,7 +325,6 @@ async function sendConfirmationEmail(reg, qrBuffer) {
 
       <hr style="${divider}"/>
 
-      <!-- Important Reminders -->
       <div style="${infoBox}border-left-color:#f59e0b;background:rgba(245,158,11,0.07);">
         <p style="margin:0 0 12px;color:#fbbf24;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">⚠️ IMPORTANT REMINDERS</p>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Carry this QR code (digital or printed) for entry</span></div>
@@ -342,15 +333,7 @@ async function sendConfirmationEmail(reg, qrBuffer) {
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Attendance is mandatory for both days to receive the certificate</span></div>
       </div>
 
-      <!-- WhatsApp Group -->
-      <div style="background:linear-gradient(135deg,rgba(37,211,102,0.12) 0%,rgba(18,140,126,0.12) 100%);border:1px solid rgba(37,211,102,0.3);border-radius:16px;padding:24px;text-align:center;margin:20px 0;">
-        <p style="margin:0 0 6px;color:#25d366;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">📢 JOIN OUR WHATSAPP GROUP</p>
-        <p style="margin:0 0 16px;color:#94a3b8;font-size:13px;line-height:1.6;">Stay updated with workshop schedules, announcements, and last-minute info by joining our official WhatsApp group.</p>
-        <a href="https://chat.whatsapp.com/I7iRsI9Pma89sPPVOzYC8n?mode=gi_t"
-           style="display:inline-block;background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 28px;border-radius:25px;letter-spacing:0.5px;">
-          💬 Join WhatsApp Group
-        </a>
-      </div>
+      ${whatsappBlock}
 
       ${coordinatorBlock}
     </div>
@@ -384,7 +367,6 @@ async function sendRejectionEmail(reg, reason) {
   <div style="${wrapper}">
   <div style="${card}">
 
-    <!-- Header -->
     <div style="background:linear-gradient(135deg,#dc2626 0%,#9f1239 100%);padding:40px 32px;text-align:center;">
       ${citLogoImg}
       <p style="margin:0 0 8px;color:#fca5a5;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
@@ -393,23 +375,20 @@ async function sendRejectionEmail(reg, reason) {
       <p style="margin:0;color:#fca5a5;font-size:13px;letter-spacing:1px;">REGISTRATION STATUS UPDATE</p>
     </div>
 
-    <!-- Body -->
     <div style="${sectionPad}">
       <div style="${tag}background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:#fca5a5;">STATUS UPDATE</div>
       <h2 style="margin:0 0 8px;color:#f87171;font-size:20px;">Registration Could Not Be Confirmed</h2>
       <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin:0 0 20px;">
         Dear <strong style="color:#e2e8f0;">${reg.firstName} ${reg.lastName}</strong>,<br/><br/>
-        Thank you for your interest in the <strong style="color:#fca5a5;">STM32 Mastering Workshop</strong>. 
+        Thank you for your interest in the <strong style="color:#fca5a5;">STM32 Mastering Workshop</strong>.
         Unfortunately, we were unable to confirm your registration at this time.
       </p>
 
-      <!-- Reason Box -->
       <div style="${infoBox}border-left-color:#dc2626;background:rgba(220,38,38,0.1);">
         <p style="margin:0 0 8px;color:#f87171;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REASON FOR REJECTION</p>
         <p style="margin:0;color:#fca5a5;font-size:14px;line-height:1.6;">${reason}</p>
       </div>
 
-      <!-- What to do next -->
       <div style="${infoBox}border-left-color:#0d9488;background:rgba(13,148,136,0.08);">
         <p style="margin:0 0 12px;color:#2dd4bf;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">WHAT YOU CAN DO</p>
         <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Double-check your payment details and transaction ID</span></div>
@@ -422,7 +401,7 @@ async function sendRejectionEmail(reg, reason) {
       <hr style="${divider}"/>
 
       <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin:0 0 16px;">
-        If you believe this decision was made in error or need further assistance, 
+        If you believe this decision was made in error or need further assistance,
         please contact our program coordinator directly.
       </p>
 
