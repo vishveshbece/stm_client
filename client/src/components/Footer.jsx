@@ -54,13 +54,21 @@ export default function Footer() {
                   <Phone size={13} className="text-indigo-400" />
                 </div>
                 <div>
-                  <p className="font-body text-sm text-slate-400 font-medium">Student Co-ordinator</p>
-                  <p className="font-body text-sm text-slate-400 font-medium">POOJAA SRi S –{' '}
+                  <p className="font-body text-sm text-slate-400 font-medium">Student Co-ordinators</p>
+                  <p className="font-body text-sm text-slate-400 font-medium">POOJAA SRI S –{' '}
                     <a
                       href="tel:9106689525"
                       className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
                       9106689525
+                    </a>
+                  </p>
+                  <p className="font-body text-sm text-slate-400 font-medium">RATHISH KUMAR R–{' '}
+                    <a
+                      href="tel:8428024725"
+                      className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                    >
+                      8428024725
                     </a>
                   </p>
                 </div>
@@ -90,7 +98,7 @@ export default function Footer() {
                   href="mailto:iotcoe@citchennai.net"
                   className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors mt-1"
                 >
-                  iotcoe@citchennai.net
+                  edwardpaulrajj@citchennai.neT
                 </a>
               </div>
             </div>

@@ -15,8 +15,8 @@ const BOARDS = [
 ];
 
 const EVENT_DETAILS = [
-  { icon: Calendar, label: 'March 5 & 6', sub: '2025' },
-  { icon: Clock,    label: '9:00 AM',     sub: '3:00 PM' },
+  { icon: Calendar, label: 'March 5 & 6', sub: '2026' },
+  { icon: Clock,    label: '8:30 AM',     sub: '3:00 PM' },
   { icon: MapPin,   label: 'CIT Chennai', sub: 'Chennai Institute of Technology' },
 ];
 
@@ -436,6 +436,10 @@ export default function HeroSection({ onRegister }) {
             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             <span className="font-mono text-xs text-indigo-300 tracking-widest">REGISTRATION OPEN</span>
           </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/40 bg-indigo-950/60">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+            <span className="font-mono text-xs text-indigo-300 tracking-widest">LIMITED SEATS</span>
+          </div>
         </motion.div>
 
         {/* headline — centred on mobile */}
@@ -537,6 +541,10 @@ export default function HeroSection({ onRegister }) {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/40 bg-indigo-950/50 mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             <span className="font-mono text-xs text-indigo-300 tracking-widest">REGISTRATION OPEN</span>
+          </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/40 bg-indigo-950/50 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+            <span className="font-mono text-xs text-indigo-300 tracking-widest">LIMITED SEATS</span>
           </div>
 
           <h1 className="font-display text-5xl xl:text-6xl font-black leading-tight mb-4">

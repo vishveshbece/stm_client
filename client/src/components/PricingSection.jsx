@@ -3,10 +3,9 @@ import { motion } from 'framer-motion';
 import { Check, Package, Cpu } from 'lucide-react';
 
 const kitIncludes = [
-  'STM32 Development Board (Nucleo-64)',
+  'STM32 Development Kit',
   'Starter Peripheral Modules',
   'USB Micro-B Cable',
-  'Breadboard & Jump Wires',
 ];
 
 const bothInclude = [
@@ -115,11 +114,6 @@ export default function PricingSection({ onRegister }) {
             <div className="absolute inset-[1.5px] bg-gradient-to-br from-slate-900 to-indigo-950 rounded-[14px] pointer-events-none" />
 
             <div className="relative p-6">
-
-              <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-gradient-to-r from-indigo-500 to-violet-600 rounded-full shadow-lg shadow-indigo-500/30">
-                <span className="font-mono text-xs font-bold text-white tracking-widest">RECOMMENDED</span>
-              </div>
-
               <div className="flex items-center gap-3 mb-2">
                 <Package size={18} className="text-indigo-400" />
                 <p className="font-display text-xs tracking-widest text-indigo-400">WITH COMPLETE KIT</p>
