@@ -66,7 +66,7 @@ const tableValue = `padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;`
 
 // ─── WhatsApp CTA Block (shared) ─────────────────────────────────────────────
 // Replace WHATSAPP_LINK with your actual WhatsApp group/channel invite URL
-const WHATSAPP_LINK = 'https://chat.whatsapp.com/YOUR_INVITE_CODE_HERE';
+const WHATSAPP_LINK = 'https://chat.whatsapp.com/I7iRsI9Pma89sPPVOzYC8n?mode=gi_t';
 
 const whatsappBlock = `
   <div style="text-align:center;margin:24px 0;">
@@ -155,7 +155,7 @@ function buildHeader(headerGradient, subtextColor, badgeHtml = '') {
     <div style="background:${headerGradient};padding:40px 32px;text-align:center;">
       <!-- College name — NEW addition above workshop title -->
       <p style="margin:0 0 2px;color:rgba(255,255,255,0.55);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;">Chennai Institute of Technology</p>
-      <p style="margin:0 0 10px;color:${subtextColor};font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
+      <p style="margin:0 0 10px;color:${subtextColor};font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTER OF EXCELLENCE</p>
       <h1 style="margin:0 0 6px;color:#fff;font-size:26px;font-weight:900;letter-spacing:2px;">STM32 MASTERING</h1>
       <h2 style="margin:0 0 12px;color:#fff;font-size:20px;font-weight:700;letter-spacing:1px;">WORKSHOP</h2>
       ${badgeHtml}

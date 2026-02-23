@@ -12,7 +12,7 @@ import axios from 'axios';
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 /* ─── UPI Configuration ──────────────────────────────────────── */
-const UPI_ID_GPAY    = 'paulgracehannah@okaxis';
+const UPI_ID_GPAY    = 'ashoktharan12@oksbi';
 const UPI_ID_PHONEPE = '9840837564@ybl';
 
 /* ─── File constraints ──────────────────────────────────────── */
