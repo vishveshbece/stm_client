@@ -33,7 +33,7 @@ export default function Footer() {
                   STM32 MASTERING
                 </p>
                 <p className="font-display text-xs text-slate-500 tracking-wider leading-none mt-0.5">
-                  WORKSHOP 2025
+                  WORKSHOP 2026
                 </p>
               </div>
             </div>
@@ -119,7 +119,7 @@ export default function Footer() {
             {/* Event date badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-950/40 mb-3">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              <span className="font-mono text-xs text-indigo-400">March 5 & 6, 2025</span>
+              <span className="font-mono text-xs text-indigo-400">March 5 & 6, 2026</span>
             </div>
 
             {/* Time info — contrast fixed: slate-600 → slate-500 */}
@@ -132,7 +132,7 @@ export default function Footer() {
         {/* ── Copyright bar ── */}
         <div className="border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-body text-xs text-slate-400">
-            © 2025 STM32 Mastering Workshop · IoT Centers of Excellence · Chennai Institute of Technology
+            © 2026STM32 Mastering Workshop · IoT Centers of Excellence · Chennai Institute of Technology
           </p>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
