@@ -1,10 +1,27 @@
 const SibApiV3Sdk = require('sib-api-v3-sdk');
+const fs = require('fs');
+const path = require('path');
 
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+// ─── CIT Logo (loaded once at module level) ───────────────────────────────────
+
+const citLogoPath = path.join(__dirname, 'assets', 'cit_logo.png');
+const citLogoBase64 = fs.readFileSync(citLogoPath).toString('base64');
+
+const citLogoAttachment = {
+  content: citLogoBase64,
+  name: 'cit_logo.png',
+};
+
+// CID reference used in HTML
+const citLogoCid = 'cit_logo';
+
+const citLogoImg = `<img src="cid:${citLogoCid}" alt="Chennai Institute of Technology" style="height:64px;width:auto;margin-bottom:16px;object-fit:contain;" />`;
 
 // ─── Shared Styles ───────────────────────────────────────────────────────────
 
@@ -54,10 +71,6 @@ const highlight = `
   font-size:14px;
 `;
 
-// ─── FIX 1: footer — was #374151 (gray-700) and #4f46e5 (indigo-600) on
-//   #0a0a1a (near-black) → both nearly invisible.
-//   Fixed: org name → #818cf8 (indigo-400), subtext → #64748b (slate-500)
-//   which gives ~4.5:1 and ~3.5:1 respectively on the very dark bg.
 const footer = `
   background:#0a0a1a;
   border-top:1px solid rgba(99,102,241,0.2);
@@ -65,8 +78,6 @@ const footer = `
   text-align:center;
 `;
 
-// ─── Shared table label style — centralised so one fix covers all tables.
-//   FIX 2: was #64748b (slate-500, ~3:1 on dark) → now #94a3b8 (slate-400, ~5:1)
 const tableLabel = `padding:5px 0;color:#94a3b8;font-size:13px;width:130px;`;
 const tableValue = `padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;`;
 
@@ -74,17 +85,15 @@ const tableValue = `padding:5px 0;color:#e2e8f0;font-size:13px;font-weight:600;`
 
 const eventDetailsBlock = `
   <div style="${infoBox}">
-    <!-- FIX 3: section label was #6366f1 (indigo-500, borderline ~3.5:1 on dark infoBox)
-         → now #818cf8 (indigo-400, ~5.5:1) used for all infoBox headings -->
     <p style="margin:0 0 12px;color:#818cf8;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">EVENT DETAILS</p>
     <table style="width:100%;border-collapse:collapse;">
       <tr>
         <td style="${tableLabel}">📅 Date</td>
-        <td style="${tableValue}">March 5 & 6, 2025</td>
+        <td style="${tableValue}">March 5 & 6, 2026</td>
       </tr>
       <tr>
         <td style="${tableLabel}">⏰ Time</td>
-        <td style="${tableValue}">9:00 AM – 3:00 PM Daily</td>
+        <td style="${tableValue}">8:30 AM – 3:00 PM Daily</td>
       </tr>
       <tr>
         <td style="${tableLabel}">📍 Venue</td>
@@ -92,7 +101,7 @@ const eventDetailsBlock = `
       </tr>
       <tr>
         <td style="${tableLabel}">🏛️ Organized by</td>
-        <td style="${tableValue}">IoT Centers of Excellence</td>
+        <td style="${tableValue}">IoT Center of Excellence</td>
       </tr>
     </table>
   </div>
@@ -100,9 +109,7 @@ const eventDetailsBlock = `
 
 const programHighlights = `
   <div style="${infoBox}border-left-color:#7c3aed;">
-    <!-- FIX 4: was #7c3aed (violet-600, ~2.5:1 on dark) → now #a78bfa (violet-400, ~6:1) -->
     <p style="margin:0 0 14px;color:#a78bfa;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">PROGRAM HIGHLIGHTS</p>
-    <!-- FIX 5: highlight icons were #6366f1 (borderline) → now #818cf8 (indigo-400) -->
     <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Hands-On Training with STM32 Development Board</span></div>
     <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>Bare Metal Programming Concepts</span></div>
     <div style="${highlight}"><span style="color:#818cf8;font-size:16px;">⚡</span><span>STM32 HAL Architecture</span></div>
@@ -115,25 +122,25 @@ const programHighlights = `
 const valueAdditions = `
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin:16px 0;">
     <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 16px;font-size:12px;color:#6ee7b7;">🏆 Certificate of Participation</div>
-    <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 16px;font-size:12px;color:#6ee7b7;">☕ Refreshments Included</div>
+    <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 16px;font-size:12px;color:#6ee7b7;">☕ Refreshment Included</div>
     <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 16px;font-size:12px;color:#6ee7b7;">🎁 Performance-Based Awards & Gifts</div>
   </div>
 `;
 
 const coordinatorBlock = `
   <div style="background:rgba(15,23,42,0.8);border-radius:10px;padding:16px 20px;margin-top:20px;border:1px solid rgba(99,102,241,0.15);">
-    <!-- FIX 6: label was #64748b (~3:1) → now #94a3b8 (~5:1) -->
-    <p style="margin:0 0 6px;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;">PROGRAM COORDINATOR</p>
-    <p style="margin:0;color:#e2e8f0;font-size:14px;font-weight:600;">Edward Paul Raj</p>
-    <p style="margin:4px 0 0;color:#818cf8;font-size:13px;">📞 9894923662</p>
+    <p style="margin:0 0 6px;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;">STUDENT COORDINATOR</p>
+    <p style="margin:0;color:#e2e8f0;font-size:14px;font-weight:600;">POOJAA SRI S</p>
+    <p style="margin:4px 0 0;color:#818cf8;font-size:13px;">📞 9106689525</p>
+    <p style="margin:0;color:#e2e8f0;font-size:14px;font-weight:600;">RATHISH KUMAR R</p>
+    <p style="margin:4px 0 0;color:#818cf8;font-size:13px;">📞 8428024725</p>
   </div>
 `;
 
-// FIX 1 applied here — footer text colors lifted for dark background
 const footerBlock = `
   <div style="${footer}">
-    <p style="margin:0 0 4px;color:#818cf8;font-size:12px;font-weight:700;letter-spacing:1px;">IOT CENTERS OF EXCELLENCE</p>
-    <p style="margin:0;color:#64748b;font-size:12px;">Chennai Institute of Technology · STM32 Mastering Workshop 2025</p>
+    <p style="margin:0 0 4px;color:#818cf8;font-size:12px;font-weight:700;letter-spacing:1px;">IOT CENTER OF EXCELLENCE</p>
+    <p style="margin:0;color:#64748b;font-size:12px;">Chennai Institute of Technology · STM32 Mastering Workshop 2026</p>
   </div>
 `;
 
@@ -148,9 +155,13 @@ async function sendViaApi(options) {
     email: process.env.EMAIL_FROM || 'vishveshbece@gmail.com',
   };
   sendSmtpEmail.to = [{ email: options.to }];
-  if (options.attachments) {
-    sendSmtpEmail.attachment = options.attachments;
-  }
+
+  // Always include CIT logo + any extra attachments
+  const baseAttachments = [citLogoAttachment];
+  sendSmtpEmail.attachment = options.attachments
+    ? [...baseAttachments, ...options.attachments]
+    : baseAttachments;
+
   try {
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent. Message ID:', data.messageId);
@@ -171,6 +182,7 @@ async function sendProcessingEmail(reg) {
 
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);padding:40px 32px;text-align:center;">
+      ${citLogoImg}
       <p style="margin:0 0 8px;color:#c4b5fd;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
       <h1 style="margin:0 0 6px;color:#fff;font-size:26px;font-weight:900;letter-spacing:2px;">STM32 MASTERING</h1>
       <h2 style="margin:0 0 12px;color:#fff;font-size:20px;font-weight:700;letter-spacing:1px;">WORKSHOP</h2>
@@ -254,6 +266,7 @@ async function sendConfirmationEmail(reg, qrBuffer) {
 
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#059669 0%,#0d9488 100%);padding:40px 32px;text-align:center;">
+      ${citLogoImg}
       <p style="margin:0 0 8px;color:#a7f3d0;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
       <h1 style="margin:0 0 6px;color:#fff;font-size:26px;font-weight:900;letter-spacing:2px;">STM32 MASTERING</h1>
       <h2 style="margin:0 0 12px;color:#fff;font-size:20px;font-weight:700;letter-spacing:1px;">WORKSHOP</h2>
@@ -274,9 +287,6 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       </p>
 
       <!-- QR Code Section -->
-      <!-- FIX 7: uniqueToken was color:#374151 (gray-700) on near-white bg → nearly invisible.
-           Fixed bg to solid dark + token text to #a5b4fc (readable light indigo).
-           QR sub-text was #64748b on light bg → now white bg section uses #475569 which is fine. -->
       <div style="background:rgba(15,23,42,0.9);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:28px;text-align:center;margin:20px 0;">
         <p style="margin:0 0 16px;color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">YOUR UNIQUE ENTRY QR CODE</p>
         <img src="cid:qrcode" alt="Entry QR Code" style="width:180px;height:180px;border-radius:12px;border:3px solid rgba(16,185,129,0.4);background:#fff;"/>
@@ -324,13 +334,22 @@ async function sendConfirmationEmail(reg, qrBuffer) {
       <hr style="${divider}"/>
 
       <!-- Important Reminders -->
-      <!-- FIX 8: reminder label was #f59e0b (amber-500, ~3.5:1 on dark infoBox) → now #fbbf24 (amber-400, ~5:1) -->
       <div style="${infoBox}border-left-color:#f59e0b;background:rgba(245,158,11,0.07);">
         <p style="margin:0 0 12px;color:#fbbf24;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">⚠️ IMPORTANT REMINDERS</p>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Carry this QR code (digital or printed) for entry</span></div>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Arrive at least 15 minutes before 9:00 AM</span></div>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Bring your college ID card</span></div>
         <div style="${highlight}"><span style="color:#fbbf24;">•</span><span>Attendance is mandatory for both days to receive the certificate</span></div>
+      </div>
+
+      <!-- WhatsApp Group -->
+      <div style="background:linear-gradient(135deg,rgba(37,211,102,0.12) 0%,rgba(18,140,126,0.12) 100%);border:1px solid rgba(37,211,102,0.3);border-radius:16px;padding:24px;text-align:center;margin:20px 0;">
+        <p style="margin:0 0 6px;color:#25d366;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">📢 JOIN OUR WHATSAPP GROUP</p>
+        <p style="margin:0 0 16px;color:#94a3b8;font-size:13px;line-height:1.6;">Stay updated with workshop schedules, announcements, and last-minute info by joining our official WhatsApp group.</p>
+        <a href="https://chat.whatsapp.com/I7iRsI9Pma89sPPVOzYC8n?mode=gi_t"
+           style="display:inline-block;background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 28px;border-radius:25px;letter-spacing:0.5px;">
+          💬 Join WhatsApp Group
+        </a>
       </div>
 
       ${coordinatorBlock}
@@ -367,6 +386,7 @@ async function sendRejectionEmail(reg, reason) {
 
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#dc2626 0%,#9f1239 100%);padding:40px 32px;text-align:center;">
+      ${citLogoImg}
       <p style="margin:0 0 8px;color:#fca5a5;font-size:11px;letter-spacing:3px;font-weight:600;">IOT CENTERS OF EXCELLENCE</p>
       <h1 style="margin:0 0 6px;color:#fff;font-size:26px;font-weight:900;letter-spacing:2px;">STM32 MASTERING</h1>
       <h2 style="margin:0 0 12px;color:#fff;font-size:20px;font-weight:700;letter-spacing:1px;">WORKSHOP</h2>
@@ -384,16 +404,12 @@ async function sendRejectionEmail(reg, reason) {
       </p>
 
       <!-- Reason Box -->
-      <!-- FIX 9: reason label was #dc2626 (red-600, ~2.5:1) on dark infoBox bg → now #f87171 (red-400, ~5.5:1).
-           Reason text was #fca5a5 → kept, good contrast on dark.
-           Background was rgba(220,38,38,0.05) which made it look very light — bumped to 0.1 for definition. -->
       <div style="${infoBox}border-left-color:#dc2626;background:rgba(220,38,38,0.1);">
         <p style="margin:0 0 8px;color:#f87171;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">REASON FOR REJECTION</p>
         <p style="margin:0;color:#fca5a5;font-size:14px;line-height:1.6;">${reason}</p>
       </div>
 
       <!-- What to do next -->
-      <!-- FIX 10: label was #0d9488 (teal-700, ~3:1 on dark) → now #2dd4bf (teal-400, ~6:1) -->
       <div style="${infoBox}border-left-color:#0d9488;background:rgba(13,148,136,0.08);">
         <p style="margin:0 0 12px;color:#2dd4bf;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;">WHAT YOU CAN DO</p>
         <div style="${highlight}"><span style="color:#2dd4bf;">✦</span><span>Double-check your payment details and transaction ID</span></div>
