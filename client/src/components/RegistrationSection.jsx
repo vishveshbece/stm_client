@@ -457,7 +457,7 @@ export default function RegistrationSection({ onClose }) {
                   <p className="font-mono text-xs text-green-400 tracking-widest mb-2">NEXT STEPS</p>
                   <p className="font-body text-xs text-slate-400">✓ Check your email for a processing confirmation</p>
                   <p className="font-body text-xs text-slate-400 mt-1">✓ Await approval & QR code for entry</p>
-                  <p className="font-body text-xs text-slate-400 mt-1">✓ Arrive at CIT on March 5 by 9:00 AM</p>
+                  <p className="font-body text-xs text-slate-400 mt-1">✓ Arrive at CIT on March 5 by 8:30 AM</p>
                 </div>
                 <button onClick={onClose} className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl font-display text-xs font-bold tracking-widest text-white">
                   CLOSE

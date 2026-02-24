@@ -124,7 +124,7 @@ export default function Footer() {
 
             {/* Time info — contrast fixed: slate-600 → slate-500 */}
             <p className="font-body text-xs text-slate-500 block">
-              9:00 AM – 3:00 PM both days
+              8:30 AM – 3:00 PM both days
             </p>
           </div>
         </div>
