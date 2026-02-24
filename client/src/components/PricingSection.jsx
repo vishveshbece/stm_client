@@ -4,8 +4,7 @@ import { Check, Package, Cpu } from 'lucide-react';
 
 const kitIncludes = [
   'STM32 Development Kit',
-  'Starter Peripheral Modules',
-  'USB Micro-B Cable',
+  'Starter Peripheral Modules'
 ];
 
 const bothInclude = [

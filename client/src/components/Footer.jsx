@@ -95,7 +95,7 @@ export default function Footer() {
                   <Mail size={13} className="text-indigo-400" />
                 </div>
                 <a
-                  href="edwardpaulrajj@citchennai.net"
+                  href="mailto:edwardpaulrajj@citchennai.net"
                   className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors mt-1"
                 >
                   edwardpaulrajj@citchennai.net
