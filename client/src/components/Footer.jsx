@@ -95,10 +95,10 @@ export default function Footer() {
                   <Mail size={13} className="text-indigo-400" />
                 </div>
                 <a
-                  href="mailto:iotcoe@citchennai.net"
+                  href="edwardpaulrajj@citchennai.net"
                   className="font-mono text-xs text-indigo-400 hover:text-indigo-300 transition-colors mt-1"
                 >
-                  edwardpaulrajj@citchennai.neT
+                  edwardpaulrajj@citchennai.net
                 </a>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function Footer() {
         {/* ── Copyright bar ── */}
         <div className="border-t border-slate-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-body text-xs text-slate-400">
-            © 2026STM32 Mastering Workshop · IoT Centers of Excellence · Chennai Institute of Technology
+            © 2026STM32 Mastering Workshop · IoT Center of Excellence · Chennai Institute of Technology
           </p>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
